@@ -17,9 +17,6 @@ clickup:
     token:
 
 
-lists:
-  developers: 180311895
-
 fields:
   start_date: "58004edd-d04c-4edb-bed8-f6337397fd72"
   projects: "a34aa1f8-0ffc-4c1e-af06-f324b653610c"
