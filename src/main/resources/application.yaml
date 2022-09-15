@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/
+    username:
+    password:
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQL95Dialect
+    show-sql: false
+
+
+clickup:
+  api:
+    token:
+
+
+lists:
+  developers: 180311895
+
+fields:
+  start_date: "58004edd-d04c-4edb-bed8-f6337397fd72"
+  projects: "a34aa1f8-0ffc-4c1e-af06-f324b653610c"
+
+
