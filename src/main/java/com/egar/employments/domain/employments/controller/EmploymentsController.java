@@ -4,7 +4,6 @@ package com.egar.employments.domain.employments.controller;
 import com.egar.employments.domain.employments.EmploymentsDto;
 import com.egar.employments.domain.employments.service.EmploymentsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,9 +20,9 @@ public class EmploymentsController {
     @Autowired
     private EmploymentsService employmentsService;
 
-    @GetMapping()
-    public ResponseEntity<List<EmploymentsDto>> getTaskById(@RequestParam(name = "ids") List<String> Ids) {
-        List<EmploymentsDto> employments = employmentsService.getEmployments(Ids);
+    @GetMapping("/")
+    public ResponseEntity<List<EmploymentsDto>> getTaskById(@RequestParam("id") List<String> id) {
+        List<EmploymentsDto> employments = employmentsService.getEmployments(id);
         return new ResponseEntity<> (employments, HttpStatus.OK);
     }
 }
