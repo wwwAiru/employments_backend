@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service;
 import ru.egartech.sdk.api.TaskClient;
 import ru.egartech.sdk.dto.task.TaskDto;
 import ru.egartech.sdk.dto.task.customfield.field.label.LabelOptionDto;
+import ru.egartech.sdk.dto.task.customfield.field.label.LabelsFieldDto;
+import ru.egartech.sdk.dto.task.customfield.field.relationship.RelationshipFieldDto;
+import ru.egartech.sdk.dto.task.customfield.field.text.TextFieldDto;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,9 +42,9 @@ public class EmploymentsService {
      */
     private EmploymentsDto getTaskById(String taskId) {
         TaskDto taskDto = taskClient.getTaskById(taskId, false);
-        List<LabelOptionDto> labelOptionDtoList = (List<LabelOptionDto>) taskDto.customField(projectsFieldId).getValue();
+        List<LabelOptionDto> labelOptionDtoList = taskDto.customField(projectsFieldId, LabelsFieldDto.class).getValue();
         String projectName = labelOptionDtoList.get(0).getLabel();
-        String startEmploymentDate = (String) taskDto.customField(startDateFieldId).getValue();
+        String startEmploymentDate = taskDto.customField(startDateFieldId, TextFieldDto.class).getValue();
         return new EmploymentsDto(projectName, startEmploymentDate);
     }
 
