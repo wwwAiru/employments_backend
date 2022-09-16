@@ -1,24 +1,29 @@
 package com.egar.employments.domain.work_calendar.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "employments_calendar")
+@Table(name = "employment_days")
 @Getter
 @Setter
-public class EmploymentsCalendar {
+@NoArgsConstructor
+public class EmploymentDay {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
+
+    @Column(name = "project_name")
+    private String projectName;
 
     @Column(name = "date")
-    private Date date;
+    private LocalDate date;
 
     @Column(name = "registered_hours")
-    private Integer registeredHours;
+    private Double registeredHours;
 }
