@@ -1,12 +1,12 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/
+    url:
     username:
     password:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQL95Dialect
     show-sql: false
@@ -14,7 +14,7 @@ spring:
 
 clickup:
   api:
-    token:
+    tokens:
 
 
 fields:
