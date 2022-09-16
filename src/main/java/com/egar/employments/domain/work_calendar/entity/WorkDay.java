@@ -18,10 +18,11 @@ public class WorkDay {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "date")
+    @Column(name = "date", columnDefinition = "timestamp")
     private LocalDate date;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(16)")
     private DayType dayType;
 
     public WorkDay(LocalDate date) {

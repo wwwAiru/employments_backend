@@ -21,9 +21,9 @@ public class EmploymentDay {
     @Column(name = "project_name")
     private String projectName;
 
-    @Column(name = "date")
+    @Column(name = "date", columnDefinition = "timestamp")
     private LocalDate date;
 
-    @Column(name = "registered_hours")
+    @Column(name = "registered_hours", columnDefinition = "numeric(2,2)")
     private Double registeredHours;
 }
