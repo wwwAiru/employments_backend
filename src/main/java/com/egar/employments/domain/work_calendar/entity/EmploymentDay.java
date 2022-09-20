@@ -24,6 +24,12 @@ public class EmploymentDay {
     @Column(name = "date", columnDefinition = "timestamp")
     private LocalDate date;
 
-    @Column(name = "registered_hours", columnDefinition = "numeric(2,2)")
+    @Column(name = "registered_hours", columnDefinition = "numeric(4,2)")
     private Double registeredHours;
+
+    public EmploymentDay(String projectName, LocalDate date, Double registeredHours) {
+        this.projectName = projectName;
+        this.date = date;
+        this.registeredHours = registeredHours;
+    }
 }
