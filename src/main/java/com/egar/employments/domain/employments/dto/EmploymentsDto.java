@@ -1,4 +1,4 @@
-package com.egar.employments.domain.employments;
+package com.egar.employments.domain.employments.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
