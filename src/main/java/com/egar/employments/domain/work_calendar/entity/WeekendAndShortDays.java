@@ -8,11 +8,11 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "work_days")
+@Table(name = "weekend")
 @Getter
 @Setter
 @NoArgsConstructor
-public class WorkDay {
+public class WeekendAndShortDays {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id")
@@ -25,13 +25,8 @@ public class WorkDay {
     @Column(columnDefinition = "varchar(16)")
     private DayType dayType;
 
-    public WorkDay(LocalDate date) {
+    public WeekendAndShortDays(LocalDate date) {
         this.date = date;
-    }
-
-    public WorkDay(LocalDate date, DayType dayType) {
-        this.date = date;
-        this.dayType = dayType;
     }
 
 }
