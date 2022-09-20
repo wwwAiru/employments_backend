@@ -74,8 +74,12 @@ public class EmploymentCalendarService {
         Map<Integer, HoursDto> workCalendar = new HashMap<>();
         // итерируя по месяцам года, заполняется workCalendar используя приватные методы этого сервиса
         for ( ; startMonth<=12; startMonth++) {
-            workCalendar.put(startMonth, new HoursDto(getWorkHoursByMonth(startMonth, startDate, shortDaysByDateBetween),
-                            getRegisteredHoursByMonth(startMonth, employmentDaysMap)));
+            Integer workHoursByMonth = getWorkHoursByMonth(startMonth, startDate, shortDaysByDateBetween);
+            Double registeredHoursByMonth = getRegisteredHoursByMonth(startMonth, employmentDaysMap);
+            // если учтённых часов в месяце нет, то не добавлять месяц в календарь
+            if (registeredHoursByMonth != 0.0) {
+                workCalendar.put(startMonth, new HoursDto(workHoursByMonth, registeredHoursByMonth));
+            }
             startDate = null; // дата выхода на проект обнуляется после первой итерации, так как больше не нужна
         }
         return new EmploymentCalendarDto(projectName, workCalendar);
