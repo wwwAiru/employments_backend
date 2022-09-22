@@ -11,11 +11,15 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQL95Dialect
     show-sql: false
 
+# url - микросервис отпусков
+# status - статус отпуска(согласован/новый..)
+vacations:
+  url: "http://localhost:8081/vacations"
+  status_type: "done"
 
 clickup:
   api:
     tokens:
-
 
 fields:
   start_date: "58004edd-d04c-4edb-bed8-f6337397fd72"
