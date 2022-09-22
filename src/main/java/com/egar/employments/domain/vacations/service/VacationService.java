@@ -22,7 +22,7 @@ public class VacationService {
     private final VacationRepository vacationRepository;
 
     public Set<LocalDate> getVacationDates(String egarId, String profileListId){
-        List<VacationPeriodDto> vacationPeriodDtos = vacationRepository.getVacationByPeriod(egarId, profileListId);
+        List<VacationPeriodDto> vacationPeriodDtos = vacationRepository.getVacations(egarId, profileListId);
         Set<LocalDate> vacationDaysSet = new HashSet<>();
         if (!vacationPeriodDtos.isEmpty()) {
             for (VacationPeriodDto vacationPeriod : vacationPeriodDtos) {
