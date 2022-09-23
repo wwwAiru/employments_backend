@@ -1,6 +1,6 @@
 package com.egar.employments.domain.employments.service;
 
-import com.egar.employments.domain.employments.dto.EmploymentsDto;
+import com.egar.employments.domain.employments.dto.EmploymentDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -31,9 +31,9 @@ public class EmploymentService {
      * @param taskIds - список id тасок
      * @return список объектов занятости(название проекта, дата начала)
      */
-    public List<EmploymentsDto> getEmployments(List<String> taskIds) {
-        List<EmploymentsDto> employments = taskIds.stream()
-                .map(this::getTaskById)
+    public List<EmploymentDto> getEmployments(List<String> taskIds) {
+        List<EmploymentDto> employments = taskIds.stream()
+                .map(this::getEmploymentsByTaskId)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
@@ -45,13 +45,13 @@ public class EmploymentService {
      * @param taskId - id таски где находится информация по занятости
      * @return объект занятости(название проекта, дата начала)
      */
-    private Optional<EmploymentsDto> getTaskById(String taskId) {
+    private Optional<EmploymentDto> getEmploymentsByTaskId(String taskId) {
         TaskDto taskDto = taskClient.getTaskById(taskId, false);
         List<LabelOptionDto> labelOptionDtoList = taskDto.customField(projectsFieldId, LabelsFieldDto.class).getValue();
         String projectName = labelOptionDtoList.get(0).getLabel();
         String startEmploymentDate = taskDto.customField(startDateFieldId, TextFieldDto.class).getValue();
         if (projectName!= null & startEmploymentDate != null) {
-            return Optional.of(new EmploymentsDto(projectName, startEmploymentDate));
+            return Optional.of(new EmploymentDto(projectName, startEmploymentDate));
         }
         return Optional.empty();
     }

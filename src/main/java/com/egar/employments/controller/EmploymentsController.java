@@ -1,7 +1,7 @@
 package com.egar.employments.controller;
 
 
-import com.egar.employments.domain.employments.dto.EmploymentsDto;
+import com.egar.employments.domain.employments.dto.EmploymentDto;
 import com.egar.employments.domain.employments.service.EmploymentService;
 import com.egar.employments.domain.work_calendar.dto.EmploymentCalendarDto;
 import com.egar.employments.domain.work_calendar.service.EmploymentCalendarService;
@@ -26,8 +26,8 @@ public class EmploymentsController {
     private final EmploymentCalendarService employmentCalendarService;
 
     @GetMapping("/")
-    public ResponseEntity<List<EmploymentsDto>> getTaskById(@RequestParam("id") List<String> id) {
-        List<EmploymentsDto> employments = employmentService.getEmployments(id);
+    public ResponseEntity<List<EmploymentDto>> getTaskById(@RequestParam("id") List<String> id) {
+        List<EmploymentDto> employments = employmentService.getEmployments(id);
         return new ResponseEntity<> (employments, HttpStatus.OK);
     }
 

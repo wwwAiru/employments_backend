@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class EmploymentsDto {
+public class EmploymentDto {
 
     @JsonProperty("project_name")
     private String projectName;
@@ -14,7 +14,7 @@ public class EmploymentsDto {
     @JsonProperty("begin_date")
     private String startEmploymentDate;
 
-    public EmploymentsDto(String name, String date) {
+    public EmploymentDto(String name, String date) {
         this.projectName = name;
         this.startEmploymentDate = date;
     }
