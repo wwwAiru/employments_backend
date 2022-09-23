@@ -14,6 +14,7 @@ public class VacationPeriodDto {
     @JsonProperty("end_date")
     private Long endDate;
 
-    private String status;
+    @JsonProperty("status_type")
+    private String statusType;
 
 }
