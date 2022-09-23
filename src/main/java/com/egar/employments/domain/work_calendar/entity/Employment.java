@@ -8,18 +8,22 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "employment_days")
+@Table(name = "employments")
 @Getter
 @Setter
 @NoArgsConstructor
-public class EmploymentDay {
+public class Employment {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "project_name")
-    private String projectName;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "project_id")
+    private Project project;
+
+    @Column(name = "egar_id", columnDefinition = "varchar(64)")
+    private String egarId;
 
     @Column(name = "date", columnDefinition = "timestamp")
     private LocalDate date;
@@ -27,9 +31,8 @@ public class EmploymentDay {
     @Column(name = "registered_hours", columnDefinition = "numeric(4,2)")
     private Double registeredHours;
 
-    public EmploymentDay(String projectName, LocalDate date, Double registeredHours) {
-        this.projectName = projectName;
-        this.date = date;
-        this.registeredHours = registeredHours;
+    public Employment(Project project, String egarId) {
+        this.project = project;
+        this.egarId = egarId;
     }
 }
