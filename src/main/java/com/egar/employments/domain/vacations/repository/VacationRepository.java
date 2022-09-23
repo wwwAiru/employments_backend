@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +25,7 @@ public class VacationRepository {
     @Value("${vacations.url}")
     private String url;
 
-    @Value("${vacations.status}")
+    @Value("${vacations.status_type}")
     private String vacationStatus;
 
     /**
@@ -37,18 +36,13 @@ public class VacationRepository {
      */
     @SneakyThrows
     public List<VacationPeriodDto> getVacations(String egarId, String profileListId) {
-        String urlTemplate = UriComponentsBuilder.fromHttpUrl(url)
-                .queryParam("egar_id", "{egarId}")
-                .queryParam("profile_list_id", "{profileListId}")
-                .encode()
-                .toUriString();
         Map<String, String> params = new HashMap<>();
         params.put("egarId", egarId);
         params.put("profileListId", profileListId);
-        ResponseEntity<String> response = restTemplate.getForEntity(urlTemplate, String.class, params);
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, params);
         List<VacationPeriodDto> vacationPeriodDtos = objectMapper.readValue(response.getBody(), new TypeReference<>(){});
         List<VacationPeriodDto> validVacationsList = vacationPeriodDtos.stream()
-                .filter(v -> v.getStatus().equals(vacationStatus)).toList();
+                .filter(v -> v.getStatusType().equals(vacationStatus)).toList();
         return validVacationsList;
     }
 }
