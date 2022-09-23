@@ -27,6 +27,20 @@ public class EmploymentService {
     private String projectsFieldId;
 
     /**
+     * метод получения списка объектов занятости по списку id тасок
+     * @param taskIds - список id тасок
+     * @return список объектов занятости(название проекта, дата начала)
+     */
+    public List<EmploymentsDto> getEmployments(List<String> taskIds) {
+        List<EmploymentsDto> employments = taskIds.stream()
+                .map(this::getTaskById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+        return employments;
+    }
+
+    /**
      * метод получения информации о занятости(название проекта, дата начала) по одному id таски
      * @param taskId - id таски где находится информация по занятости
      * @return объект занятости(название проекта, дата начала)
@@ -40,19 +54,5 @@ public class EmploymentService {
             return Optional.of(new EmploymentsDto(projectName, startEmploymentDate));
         }
         return Optional.empty();
-    }
-
-    /**
-     * метод получения списка объектов занятости по списку id тасок
-     * @param taskIds
-     * @return список объектов занятости(название проекта, дата начала)
-     */
-    public List<EmploymentsDto> getEmployments(List<String> taskIds) {
-        List<EmploymentsDto> employments = taskIds.stream()
-                .map(this::getTaskById)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
-        return employments;
     }
 }
