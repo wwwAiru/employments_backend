@@ -5,16 +5,16 @@ spring:
     password:
     driver-class-name: org.postgresql.Driver
   jpa:
-    hibernate:
-      ddl-auto: create
+#    hibernate:
+#      ddl-auto: create
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQL95Dialect
     show-sql: false
 
 # url - микросервис отпусков
-# status - статус отпуска(согласован/новый..)
+# status_type - статус отпуска
 vacations:
-  url: "http://localhost:8081/vacations"
+  url: "http://localhost:8081/vacations/{profileListId}/{egarId}"
   status_type: "done"
 
 clickup:
