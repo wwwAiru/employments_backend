@@ -1,15 +1,14 @@
 package com.egar.employments.domain.work_calendar.repository;
 
-import com.egar.employments.domain.work_calendar.entity.EmploymentDay;
+import com.egar.employments.domain.work_calendar.entity.Employment;
+import com.egar.employments.domain.work_calendar.entity.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
 import java.util.List;
+public interface EmploymentDayRepository extends JpaRepository<Employment, Long> {
 
-public interface EmploymentDayRepository extends JpaRepository<EmploymentDay, Long> {
-
-    @Query("select ed from EmploymentDay ed where lower(ed.projectName) like lower(concat('%', ?1,'%')) and ed.date between ?2 and ?3")
-    List<EmploymentDay> findEmploymentDay(String projectName, LocalDate startDate, LocalDate endDate);
-
+    @Query("select e from Employment e where e.project = ?1 and e.egarId = ?2 and e.date between ?3 and ?4")
+    List<Employment> findEmployment(Project project, String egarId, LocalDate startDate, LocalDate endDate);
 }
