@@ -1,5 +1,6 @@
 package com.egar.employments.domain.work_calendar.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,11 +22,15 @@ public class Project {
     @Column(name = "project_name", columnDefinition = "varchar(255)")
     private String projectName;
 
-    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "project")
     private List<Employment> employments;
 
     public Project(String projectName) {
         this.projectName = projectName;
     }
 
+    public Project(Long id, String projectName) {
+        this.id = id;
+        this.projectName = projectName;
+    }
 }

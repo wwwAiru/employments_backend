@@ -2,10 +2,12 @@ package com.egar.employments.domain.work_calendar.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
 @Data
+@NoArgsConstructor
 public class EmploymentCalendarDto {
 
     @JsonProperty("project_name")
