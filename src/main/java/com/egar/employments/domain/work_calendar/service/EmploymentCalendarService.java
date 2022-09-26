@@ -9,7 +9,7 @@ import com.egar.employments.domain.work_calendar.entity.Project;
 import com.egar.employments.domain.work_calendar.entity.WeekendAndShortDays;
 import com.egar.employments.domain.work_calendar.repository.EmploymentDayRepository;
 import com.egar.employments.domain.work_calendar.repository.ProjectRepository;
-import com.egar.employments.domain.work_calendar.repository.WorkDayRepository;
+import com.egar.employments.domain.work_calendar.repository.WeekendAndShortDayRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +29,7 @@ public class EmploymentCalendarService {
 
     private final int shortDayHours = 7;
 
-    private final WorkDayRepository workDayRepository;
+    private final WeekendAndShortDayRepository weekendAndShortDayRepository;
 
     private final EmploymentDayRepository employmentDayRepository;
 
@@ -56,21 +56,21 @@ public class EmploymentCalendarService {
         LocalDate lastDayOfYear = LocalDate.now().with(TemporalAdjusters.lastDayOfYear());
         // получаем дату выхода на проект в миллисекундах и преобразуем в LocalDate
         LocalDate employmentStartDate = LocalDate.ofInstant(Instant.ofEpochMilli(Long.parseLong(beginDate)), ZoneId.of("UTC"));
+        // получаем из базы все выходные, праздники, сокращённые дни за период текущего года
+        List<WeekendAndShortDays> weekendAndShortDays = weekendAndShortDayRepository.findWeekendAndShortDays(startDate, lastDayOfYear);
         int startMonth;
         /* если дата выхода на проект раньше даты начала текущего года,
             то месяц для создания рабочего календаря устанавливается первый(январь),
             иначе начальный месяц устанавливается - месяц выхода на проект,
             дополнительно устанавливается конкретная дата выхода на проект - startDate
         */
-        if (employmentStartDate.isBefore(LocalDate.now().with(TemporalAdjusters.firstDayOfYear()))) {
+        if (employmentStartDate.isBefore(startDate)) {
             startMonth = 1;
         } else {
             startMonth = employmentStartDate.getMonthValue();
             startDate = employmentStartDate;
         }
 
-        // получаем из базы все выходные, праздники, сокращённые дни за период текущего года
-        List<WeekendAndShortDays> weekendAndShortDays = workDayRepository.findWeekendAndShortDays(startDate, lastDayOfYear);
         // получаем из б.д. List<EmploymentDay> список учтённых часов на проетке по названию проета
         List<Employment> registeredHoursByYear = findRegisteredHoursByYear(egarId, projectName);
 
