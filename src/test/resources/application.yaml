@@ -1,0 +1,28 @@
+spring:
+  datasource:
+    url:
+    username:
+    password:
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    #    hibernate:
+    #      ddl-auto: create
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQL95Dialect
+    show-sql: false
+
+# url - микросервис отпусков
+# status_type - статус отпуска
+vacations:
+  url: "http://localhost:8081/vacations/{profileListId}/{egarId}"
+  status_type: "done"
+
+clickup:
+  api:
+    tokens:
+
+fields:
+  start_date: "58004edd-d04c-4edb-bed8-f6337397fd72"
+  projects: "a34aa1f8-0ffc-4c1e-af06-f324b653610c"
+
+
