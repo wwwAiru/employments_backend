@@ -18,7 +18,7 @@ public class Employment {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne()
     @JoinColumn(name = "project_id")
     private Project project;
 
