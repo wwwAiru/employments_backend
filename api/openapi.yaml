@@ -1,0 +1,89 @@
+openapi: 3.0.1
+info:
+  title: employments_backend
+  description: employments_backend
+  version: 1.0.0
+
+paths:
+  /employments/calendar:
+    get:
+      tags:
+        - employments-controller
+      operationId: getEmploymentCalendar
+      parameters:
+        - name: project_name
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: begin_date
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: egar_id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: profile_list_id
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/EmploymentCalendarDto'
+  /employments/:
+    get:
+      tags:
+        - employments-controller
+      operationId: getTaskById
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EmploymentDto'
+components:
+  schemas:
+    EmploymentCalendarDto:
+      type: object
+      properties:
+        project_name:
+          type: string
+        work_calendar:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/HoursDto'
+    HoursDto:
+      type: object
+      properties:
+        work_hours:
+          type: integer
+          format: int32
+        registered_hours:
+          type: number
+          format: double
+    EmploymentDto:
+      type: object
+      properties:
+        project_name:
+          type: string
+        begin_date:
+          type: string
