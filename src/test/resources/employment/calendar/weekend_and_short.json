@@ -1,0 +1,362 @@
+[
+  {
+    "id": 82,
+    "date": [
+      2022,
+      9,
+      3
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 83,
+    "date": [
+      2022,
+      9,
+      4
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 84,
+    "date": [
+      2022,
+      9,
+      10
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 85,
+    "date": [
+      2022,
+      9,
+      11
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 86,
+    "date": [
+      2022,
+      9,
+      15
+    ],
+    "dayType": "SHORTDAY"
+  },
+  {
+    "id": 87,
+    "date": [
+      2022,
+      9,
+      17
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 88,
+    "date": [
+      2022,
+      9,
+      18
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 89,
+    "date": [
+      2022,
+      9,
+      21
+    ],
+    "dayType": "HOLIDAY"
+  },
+  {
+    "id": 90,
+    "date": [
+      2022,
+      9,
+      22
+    ],
+    "dayType": "HOLIDAY"
+  },
+  {
+    "id": 91,
+    "date": [
+      2022,
+      9,
+      24
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 92,
+    "date": [
+      2022,
+      9,
+      25
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 93,
+    "date": [
+      2022,
+      9,
+      28
+    ],
+    "dayType": "SHORTDAY"
+  },
+  {
+    "id": 94,
+    "date": [
+      2022,
+      10,
+      1
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 95,
+    "date": [
+      2022,
+      10,
+      2
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 96,
+    "date": [
+      2022,
+      10,
+      8
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 97,
+    "date": [
+      2022,
+      10,
+      9
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 98,
+    "date": [
+      2022,
+      10,
+      15
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 99,
+    "date": [
+      2022,
+      10,
+      16
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 100,
+    "date": [
+      2022,
+      10,
+      22
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 101,
+    "date": [
+      2022,
+      10,
+      23
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 102,
+    "date": [
+      2022,
+      10,
+      29
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 103,
+    "date": [
+      2022,
+      10,
+      30
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 104,
+    "date": [
+      2022,
+      11,
+      5
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 105,
+    "date": [
+      2022,
+      11,
+      6
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 106,
+    "date": [
+      2022,
+      11,
+      12
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 107,
+    "date": [
+      2022,
+      11,
+      13
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 108,
+    "date": [
+      2022,
+      11,
+      19
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 109,
+    "date": [
+      2022,
+      11,
+      20
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 110,
+    "date": [
+      2022,
+      11,
+      26
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 111,
+    "date": [
+      2022,
+      11,
+      27
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 112,
+    "date": [
+      2022,
+      12,
+      3
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 113,
+    "date": [
+      2022,
+      12,
+      4
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 114,
+    "date": [
+      2022,
+      12,
+      10
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 115,
+    "date": [
+      2022,
+      12,
+      11
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 116,
+    "date": [
+      2022,
+      12,
+      17
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 117,
+    "date": [
+      2022,
+      12,
+      18
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 118,
+    "date": [
+      2022,
+      12,
+      23
+    ],
+    "dayType": "HOLIDAY"
+  },
+  {
+    "id": 119,
+    "date": [
+      2022,
+      12,
+      24
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 120,
+    "date": [
+      2022,
+      12,
+      25
+    ],
+    "dayType": "WEEKEND"
+  },
+  {
+    "id": 121,
+    "date": [
+      2022,
+      12,
+      31
+    ],
+    "dayType": "WEEKEND"
+  }
+]
