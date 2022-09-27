@@ -5,8 +5,8 @@ spring:
     password:
     driver-class-name: org.postgresql.Driver
   jpa:
-    #    hibernate:
-    #      ddl-auto: create
+#    hibernate:
+#      ddl-auto: create
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQL95Dialect
     show-sql: false
@@ -23,6 +23,7 @@ clickup:
 
 fields:
   start_date: "58004edd-d04c-4edb-bed8-f6337397fd72"
+  end_date: "879e67e3-eb65-45eb-9a82-94ac94470918"
   projects: "a34aa1f8-0ffc-4c1e-af06-f324b653610c"
 
 
