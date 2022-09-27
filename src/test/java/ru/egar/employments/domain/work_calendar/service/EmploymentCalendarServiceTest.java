@@ -71,7 +71,11 @@ class EmploymentCalendarServiceTest extends AbstractSpringBootTest {
         given(weekendAndShortDayRepository.findWeekendAndShortDays(any(), any())).willReturn(weekendAndShortDays);
         given(projectRepository.findByProjectName(projectName)).willReturn(new Project(1L, "НРД"));
         given(employmentDayRepository.findEmployment(any(), anyString(), any(), any())).willReturn(employmentDays);
-        assertThat(employmentCalendarService.getEmploymentCalendar(projectName, "1661994000000", egarId, profileListId))
-                .isEqualTo(calendarDto);
+        EmploymentCalendarDto employmentCalendar = employmentCalendarService.getEmploymentCalendar(projectName, "1661994000000", egarId, profileListId);
+        assertThat(employmentCalendar).isEqualTo(calendarDto);
+        assertThat(employmentCalendar
+                .getWorkCalendar()
+                .get("11")
+                .getWorkHours()).isEqualTo(96);
     }
 }
