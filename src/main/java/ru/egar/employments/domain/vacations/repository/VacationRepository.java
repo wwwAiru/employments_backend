@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ *  репозиторий обращается к микросервису vacations для получения информации по отпускам сотрудника.
+ */
 @Repository
 @RequiredArgsConstructor
 public class VacationRepository {

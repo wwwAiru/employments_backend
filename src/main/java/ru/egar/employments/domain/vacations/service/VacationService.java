@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * сервис для получения дней(дат) отпуска
+ * сервис для преобразования данных из микросервиса vacations в Set<LocalDate> - сет дней(дат) отпуска сотрудника
  */
 @Service
 @RequiredArgsConstructor

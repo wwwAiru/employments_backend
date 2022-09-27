@@ -7,6 +7,10 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDate;
 
+/**
+ * сущность производственного календаря содержит дату и тип дня,
+ * учитываются только выходные, праздничные и сокращённые дни
+ */
 @Entity
 @Table(name = "weekend")
 @Getter

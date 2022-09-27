@@ -7,6 +7,10 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.time.LocalDate;
 
+/**
+ * Сущность занятость. Занятость сотрудника на проектах включает egarId, дату, количество учтённых часов,
+ * связанная сущность Project
+ */
 @Entity
 @Table(name = "employments")
 @Getter

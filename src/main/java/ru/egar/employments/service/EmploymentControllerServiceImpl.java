@@ -8,9 +8,13 @@ import ru.egar.employments.model.EmploymentCalendarDto;
 import ru.egar.employments.model.EmploymentDto;
 
 import java.util.List;
+
+/**
+ *  Имплементация сгенерированного интерфейса, используемого в сгенерированных контроллерах
+ */
 @Service
 @RequiredArgsConstructor
-public class EmploymentServiceImpl implements EmploymentsControllerService {
+public class EmploymentControllerServiceImpl implements EmploymentsControllerService {
 
     private final EmploymentCalendarService employmentCalendarService;
 

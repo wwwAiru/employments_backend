@@ -7,6 +7,9 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.List;
 
+/**
+ * сущность проекты, содержит названия проектов, связанная сущность Employment
+ */
 @Entity
 @Table(name = "projects")
 @Getter
