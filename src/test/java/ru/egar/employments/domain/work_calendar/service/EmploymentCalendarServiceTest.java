@@ -20,7 +20,6 @@ import ru.egar.employments.model.EmploymentCalendarDto;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +27,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
 
 class EmploymentCalendarServiceTest extends AbstractSpringBootTest {
 
@@ -53,8 +51,6 @@ class EmploymentCalendarServiceTest extends AbstractSpringBootTest {
 
     @Test
     void getEmploymentCalendar() throws IOException {
-        LocalDate firstDayOfYear = LocalDate.now().with(TemporalAdjusters.firstDayOfYear());
-        LocalDate lastDayOfYear = LocalDate.now().with(TemporalAdjusters.lastDayOfYear());
         String egarId = "username";
         String profileListId = "180311895";
         String projectName = "НРД";
@@ -72,7 +68,7 @@ class EmploymentCalendarServiceTest extends AbstractSpringBootTest {
                 .readValue(ResourceUtils.getFile(ResourceUtils
                         .CLASSPATH_URL_PREFIX.concat("employment/calendar/employment_calendar.json")), new TypeReference<>() {});
         given(vacationService.getVacationDates(egarId, profileListId)).willReturn(vacationDaysSet);
-        given(weekendAndShortDayRepository.findWeekendAndShortDays(firstDayOfYear, lastDayOfYear)).willReturn(weekendAndShortDays);
+        given(weekendAndShortDayRepository.findWeekendAndShortDays(any(), any())).willReturn(weekendAndShortDays);
         given(projectRepository.findByProjectName(projectName)).willReturn(new Project(1L, "НРД"));
         given(employmentDayRepository.findEmployment(any(), anyString(), any(), any())).willReturn(employmentDays);
         assertThat(employmentCalendarService.getEmploymentCalendar(projectName, "1661994000000", egarId, profileListId))
