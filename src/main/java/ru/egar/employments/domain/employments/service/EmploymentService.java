@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * сервис для получения списка проектов, на которых задействован сотрудник
+ */
 @Service
 @RequiredArgsConstructor
 public class EmploymentService {
@@ -22,6 +25,9 @@ public class EmploymentService {
 
     @Value("${fields.start_date}")
     private String startDateFieldId;
+
+    @Value("${fields.end_date}")
+    private String endDateFieldId;
 
     @Value("${fields.projects}")
     private String projectsFieldId;
@@ -50,7 +56,8 @@ public class EmploymentService {
         List<LabelOptionDto> labelOptionDtoList = taskDto.customField(projectsFieldId, LabelsFieldDto.class).getValue();
         String projectName = labelOptionDtoList.get(0).getLabel();
         String startEmploymentDate = taskDto.customField(startDateFieldId, TextFieldDto.class).getValue();
-        if (projectName!= null & startEmploymentDate != null) {
+        String endEmploymentDate = taskDto.customField(endDateFieldId, TextFieldDto.class).getValue();
+        if (projectName!= null & startEmploymentDate != null & endEmploymentDate == null) {
             return Optional.of(new EmploymentDto(projectName, startEmploymentDate));
         }
         return Optional.empty();

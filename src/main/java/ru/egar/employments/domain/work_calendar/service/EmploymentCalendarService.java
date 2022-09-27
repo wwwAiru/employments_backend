@@ -38,9 +38,12 @@ public class EmploymentCalendarService {
 
     /**
      * @param projectName - имя проекта для которого нужно вернуть календарь занятости
-     * при поиске в б.д. игнорируется регистр символов
-     * @return - EmploymentCalendarDto - содержит название проекта и Map<Integer, HoursDto>,
-     * где Integer - число месяца(прим. 1 - январь, 12 - декабрь), HoursDto - число рабочих часов в месяце
+     * @param beginDate - дата выхода на проект.
+     * @param egarId - id сотрудника
+     * @param profileListId - id списка в котором находится сотрудник(списки делятся на: разработчик, аналитик, тестировщик)
+     * egarId и profileListId нужны для получения дат(дней) отпусков сотрудника из микросервиса vacations.
+     * @return - EmploymentCalendarDto - содержит название проекта и Map<String, HoursDto>,
+     * где String - число месяца(прим. "1" - январь, "12" - декабрь), HoursDto - число рабочих часов в месяце
      * и число учтённых на проетке часов.
      */
     public ru.egar.employments.model.EmploymentCalendarDto getEmploymentCalendar(String projectName,
@@ -55,8 +58,6 @@ public class EmploymentCalendarService {
         LocalDate lastDayOfYear = LocalDate.now().with(TemporalAdjusters.lastDayOfYear());
         // получаем дату выхода на проект в миллисекундах и преобразуем в LocalDate
         LocalDate employmentStartDate = LocalDate.ofInstant(Instant.ofEpochMilli(Long.parseLong(beginDate)), ZoneId.of("UTC"));
-        // получаем из базы все выходные, праздники, сокращённые дни за период текущего года
-        List<WeekendAndShortDays> weekendAndShortDays = weekendAndShortDayRepository.findWeekendAndShortDays(startDate, lastDayOfYear);
         int startMonth;
         /* если дата выхода на проект раньше даты начала текущего года,
             то месяц для создания рабочего календаря устанавливается первый(январь),
@@ -69,8 +70,9 @@ public class EmploymentCalendarService {
             startMonth = employmentStartDate.getMonthValue();
             startDate = employmentStartDate;
         }
-
-        // получаем из б.д. List<EmploymentDay> список учтённых часов на проетке по названию проета
+        // получаем из базы все выходные, праздники, сокращённые дни за период текущего года
+        List<WeekendAndShortDays> weekendAndShortDays = weekendAndShortDayRepository.findWeekendAndShortDays(startDate, lastDayOfYear);
+        // получаем из б.д. List<EmploymentDay> список учтённых часов на проетке по egarId и названию проета
         List<Employment> registeredHoursByYear = findRegisteredHoursByYear(egarId, projectName);
 
         Set<LocalDate> weekendAndHolidayOfYear = getDaysByType(DayType.WEEKEND, weekendAndShortDays);
@@ -113,7 +115,7 @@ public class EmploymentCalendarService {
                                         Set<LocalDate> vacationDates) {
         AtomicInteger workHours = new AtomicInteger(0);
         /* если сет отпусков не пуст, то добавить его к выходным и праздникам
-            и исключить из сета сохращённых дней, даты отпуска
+            и исключить из сета сохращённых дней
         */
         if (!vacationDates.isEmpty()) {
             weekendAndHolidayOfYear.addAll(vacationDates);
@@ -169,10 +171,9 @@ public class EmploymentCalendarService {
 
     /**
      * метод выгружает учтённые часы на проекте, на весь текущий год, по дням
-     * @param projectName - название проекта для коготорого нужно выгрузить календарь учтённых часов
      * @param egarId - id сотрудника
-     * @return - List<EmploymentDay>.
-     * EmploymentDay - содержит имя проекта(String), дату(LocalDate),
+     * @param projectName - название проекта для коготорого нужно выгрузить календарь учтённых часов
+     * @return - List<EmploymentDay>. EmploymentDay - содержит имя проекта(String), дату(LocalDate),
      * количество учтённых часов(int)
      */
     private List<Employment> findRegisteredHoursByYear(String egarId, String projectName) {
