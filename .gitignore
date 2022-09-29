@@ -36,3 +36,4 @@ build/
 /src/main/resources/pgfutter_windows_amd64.exe
 /src/main/java/ru/egar/employments/utils/
 /src/main/resources/application.txt
+/src/main/resources/data.csv

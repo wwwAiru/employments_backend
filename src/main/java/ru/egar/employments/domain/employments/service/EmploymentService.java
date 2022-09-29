@@ -23,13 +23,13 @@ public class EmploymentService {
 
     private final TaskClient taskClient;
 
-    @Value("${fields.start_date}")
+    @Value("${fields.start_date.id}")
     private String startDateFieldId;
 
-    @Value("${fields.end_date}")
+    @Value("${fields.end_date.id}")
     private String endDateFieldId;
 
-    @Value("${fields.projects}")
+    @Value("${fields.projects.id}")
     private String projectsFieldId;
 
     /**
@@ -37,7 +37,7 @@ public class EmploymentService {
      * @param taskIds - список id тасок
      * @return список объектов занятости(название проекта, дата начала)
      */
-    public List<ru.egar.employments.model.EmploymentDto> getEmployments(List<String> taskIds) {
+    public List<EmploymentDto> getEmployments(List<String> taskIds) {
         List<ru.egar.employments.model.EmploymentDto> employments = taskIds.stream()
                 .map(this::getEmploymentsByTaskId)
                 .filter(Optional::isPresent)
@@ -51,7 +51,7 @@ public class EmploymentService {
      * @param taskId - id таски где находится информация по занятости
      * @return объект занятости(название проекта, дата начала)
      */
-    private Optional<ru.egar.employments.model.EmploymentDto> getEmploymentsByTaskId(String taskId) {
+    private Optional<EmploymentDto> getEmploymentsByTaskId(String taskId) {
         TaskDto taskDto = taskClient.getTaskById(taskId, false);
         List<LabelOptionDto> labelOptionDtoList = taskDto.customField(projectsFieldId, LabelsFieldDto.class).getValue();
         String projectName = labelOptionDtoList.get(0).getLabel();

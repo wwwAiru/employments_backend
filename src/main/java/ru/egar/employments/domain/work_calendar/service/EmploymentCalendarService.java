@@ -11,10 +11,10 @@ import ru.egar.employments.domain.work_calendar.repository.EmploymentDayReposito
 import ru.egar.employments.domain.work_calendar.repository.ProjectRepository;
 import ru.egar.employments.domain.work_calendar.repository.WeekendAndShortDayRepository;
 import ru.egar.employments.model.EmploymentCalendarDto;
+import ru.egar.employments.model.HoursDto;
+import ru.egar.employments.util.DateUtil;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -46,10 +46,10 @@ public class EmploymentCalendarService {
      * где String - число месяца(прим. "1" - январь, "12" - декабрь), HoursDto - число рабочих часов в месяце
      * и число учтённых на проетке часов.
      */
-    public ru.egar.employments.model.EmploymentCalendarDto getEmploymentCalendar(String projectName,
-                                                                                 String beginDate,
-                                                                                 String egarId,
-                                                                                 String profileListId) {
+    public EmploymentCalendarDto getEmploymentCalendar(String projectName,
+                                                       String beginDate,
+                                                       String egarId,
+                                                       String profileListId) {
         // получаем сет дней отпусков
         Set<LocalDate> vacationDates = vacationService.getVacationDates(egarId, profileListId);
         // дата первого дня текущего года
@@ -57,7 +57,7 @@ public class EmploymentCalendarService {
         // дата последнего дня текущего года
         LocalDate lastDayOfYear = LocalDate.now().with(TemporalAdjusters.lastDayOfYear());
         // получаем дату выхода на проект в миллисекундах и преобразуем в LocalDate
-        LocalDate employmentStartDate = LocalDate.ofInstant(Instant.ofEpochMilli(Long.parseLong(beginDate)), ZoneId.of("UTC"));
+        LocalDate employmentStartDate = DateUtil.unixToLocalDate(Long.parseLong(beginDate));
         int startMonth;
         /* если дата выхода на проект раньше даты начала текущего года,
             то месяц для создания рабочего календаря устанавливается первый(январь),
@@ -85,10 +85,10 @@ public class EmploymentCalendarService {
         /* создал Map<Integer, HoursDto> workCalendar, Integer - месяц, HoursDto - число рабочих
         и учтённых на проекте часов
          */
-        Map<String, ru.egar.employments.model.HoursDto> workCalendar = new HashMap<>();
+        Map<String, HoursDto> workCalendar = new HashMap<>();
         // итерируя по месяцам года, заполняется workCalendar используя приватные методы этого сервиса
         for ( ; startMonth<=12; startMonth++) {
-            ru.egar.employments.model.HoursDto hoursDto = new ru.egar.employments.model.HoursDto(
+            HoursDto hoursDto = new HoursDto(
                     getWorkHoursByMonth(startMonth, startDate, weekendAndHolidayOfYear, shortDaysOfYear, vacationDates),
                     getRegisteredHoursByMonth(startMonth, employmentDaysMap)
                     );

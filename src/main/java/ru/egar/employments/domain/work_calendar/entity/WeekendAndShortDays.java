@@ -12,7 +12,7 @@ import java.time.LocalDate;
  * учитываются только выходные, праздничные и сокращённые дни
  */
 @Entity
-@Table(name = "weekend")
+@Table(name = "weekends")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,8 +29,11 @@ public class WeekendAndShortDays {
     @Column(columnDefinition = "varchar(16)")
     private DayType dayType;
 
-    public WeekendAndShortDays(LocalDate date) {
+    public WeekendAndShortDays(LocalDate date, DayType dayType) {
         this.date = date;
+        this.dayType = dayType;
     }
 
+    public WeekendAndShortDays(LocalDate date) {
+    }
 }

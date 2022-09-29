@@ -10,4 +10,6 @@ import java.util.List;
 public interface WeekendAndShortDayRepository extends JpaRepository<WeekendAndShortDays, Long> {
     @Query("select w from WeekendAndShortDays w where w.date between ?1 and ?2")
     List<WeekendAndShortDays> findWeekendAndShortDays(LocalDate startDate, LocalDate endDate);
+
+    WeekendAndShortDays findByDate(LocalDate date);
 }

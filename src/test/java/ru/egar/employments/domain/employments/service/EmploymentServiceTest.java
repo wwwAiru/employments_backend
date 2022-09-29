@@ -7,7 +7,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 import ru.egar.employments.AbstractSpringBootTest;
+import ru.egar.employments.domain.work_calendar.repository.WeekendAndShortDayRepository;
 import ru.egar.employments.model.EmploymentDto;
 import ru.egartech.sdk.api.TaskClient;
 import ru.egartech.sdk.dto.task.deserialization.TaskDto;
@@ -23,25 +25,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@ActiveProfiles("test")
 class EmploymentServiceTest extends AbstractSpringBootTest {
 
     @Autowired
     private EmploymentService employmentService;
 
+    @Autowired
+    private WeekendAndShortDayRepository weekendAndShortDayRepository;
+
     @MockBean
     private TaskClient taskClient;
 
-    @Value("${fields.start_date}")
+    @Value("${fields.start_date.id}")
     private String startDateFieldId;
 
-    @Value("${fields.projects}")
+    @Value("${fields.projects.id}")
     private String projectsFieldId;
 
 
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    public void getEmploymentsByTaskId_not_empty() throws IOException {
+    public void getEmploymentsByTaskIdNotEmpty() throws IOException {
         List<String> listTaskIds = new ArrayList<>();
         List<EmploymentDto> employmentDtos =  new ArrayList<>();
         employmentDtos.add(new EmploymentDto("НРД", "1661994000000"));
@@ -63,7 +69,7 @@ class EmploymentServiceTest extends AbstractSpringBootTest {
     }
 
     @Test
-    public void getEmploymentsByTaskId_is_empty() throws IOException {
+    public void getEmploymentsByTaskIdIsEmpty() throws IOException {
         List<String> listTaskIds = new ArrayList<>();
         listTaskIds.add("2z4kcma");
         List<EmploymentDto> employmentDtos =  new ArrayList<>();

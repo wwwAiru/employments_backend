@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 import ru.egar.employments.domain.vacations.dto.VacationPeriodDto;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,12 +41,20 @@ public class VacationRepository {
     @SneakyThrows
     public List<VacationPeriodDto> getVacations(String egarId, String profileListId) {
         Map<String, String> params = new HashMap<>();
+        List<VacationPeriodDto> validVacationsList = new ArrayList<>();
+        ResponseEntity<String> response = null;
         params.put("egarId", egarId);
         params.put("profileListId", profileListId);
-        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class, params);
+        try {
+            response = restTemplate.getForEntity(url, String.class, params);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (response != null) {
         List<VacationPeriodDto> vacationPeriodDtos = objectMapper.readValue(response.getBody(), new TypeReference<>(){});
-        List<VacationPeriodDto> validVacationsList = vacationPeriodDtos.stream()
+        validVacationsList = vacationPeriodDtos.stream()
                 .filter(v -> v.getStatusType().equals(vacationStatus)).toList();
+        }
         return validVacationsList;
     }
 }
