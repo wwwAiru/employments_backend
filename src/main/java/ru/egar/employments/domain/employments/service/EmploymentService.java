@@ -38,7 +38,7 @@ public class EmploymentService {
      * @return список объектов занятости(название проекта, дата начала)
      */
     public List<EmploymentDto> getEmployments(List<String> taskIds) {
-        List<ru.egar.employments.model.EmploymentDto> employments = taskIds.stream()
+        List<EmploymentDto> employments = taskIds.stream()
                 .map(this::getEmploymentsByTaskId)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
