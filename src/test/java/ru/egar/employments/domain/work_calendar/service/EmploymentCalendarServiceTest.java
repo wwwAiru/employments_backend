@@ -10,6 +10,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.util.ResourceUtils;
 import ru.egar.employments.AbstractSpringBootTest;
 import ru.egar.employments.domain.vacations.service.VacationService;
+import ru.egar.employments.domain.work_calendar.entity.Employment;
 import ru.egar.employments.domain.work_calendar.entity.WeekendAndShortDays;
 import ru.egar.employments.domain.work_calendar.repository.EmploymentDayRepository;
 import ru.egar.employments.domain.work_calendar.repository.ProjectRepository;
@@ -26,6 +27,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
 @ActiveProfiles("test")
+@Sql(scripts={"classpath:data/test-data.sql"})
+@Sql(scripts = "classpath:data/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class EmploymentCalendarServiceTest extends AbstractSpringBootTest {
 
     @Autowired
@@ -43,17 +46,19 @@ class EmploymentCalendarServiceTest extends AbstractSpringBootTest {
     @MockBean
     private VacationService vacationService;
 
-    @Autowired
-    private ProjectRepository projectRepository;
 
-    @Sql(scripts={"classpath:data/test-data.sql"})
     @Test
-    public void shouldSaveUsersThroughSqlFile() {
+    public void getAllWeekendsNotEmpty() {
         List<WeekendAndShortDays> all = weekendAndShortDayRepository.findAll();
         assertThat(all).isNotEmpty();
     }
 
-    @Sql(scripts={"classpath:data/test-data.sql"})
+    @Test
+    public void getAllEmploymentsNotEmpty() {
+        List<Employment> all = employmentDayRepository.findAll();
+        assertThat(all).isNotEmpty();
+    }
+
     @Test
     void getEmploymentCalendar() throws IOException {
         String egarId = "username";
