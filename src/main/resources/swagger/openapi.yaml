@@ -8,7 +8,7 @@ paths:
   /employments/calendar:
     get:
       tags:
-        - employments-controller
+        - employments
       operationId: getEmploymentCalendar
       parameters:
         - name: project_name
@@ -41,8 +41,8 @@ paths:
   /employments/:
     get:
       tags:
-        - employments-controller
-      operationId: getTaskById
+        - employments
+      operationId: getEmploymentsByIds
       parameters:
         - name: id
           in: query
