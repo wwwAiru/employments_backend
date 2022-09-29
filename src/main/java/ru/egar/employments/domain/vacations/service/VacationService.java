@@ -3,7 +3,7 @@ package ru.egar.employments.domain.vacations.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.egar.employments.domain.vacations.dto.VacationPeriodDto;
-import ru.egar.employments.domain.vacations.repository.VacationRepository;
+import ru.egar.employments.domain.vacations.repository.VacationManager;
 import ru.egar.employments.util.DateUtil;
 
 import java.time.LocalDate;
@@ -18,10 +18,10 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class VacationService {
 
-    private final VacationRepository vacationRepository;
+    private final VacationManager vacationManager;
 
     public Set<LocalDate> getVacationDates(String egarId, String profileListId) {
-        List<VacationPeriodDto> vacationPeriodDtos = vacationRepository.getVacations(egarId, profileListId);
+        List<VacationPeriodDto> vacationPeriodDtos = vacationManager.getVacations(egarId, profileListId);
         Set<LocalDate> vacationDaysSet = new HashSet<>();
         if (!vacationPeriodDtos.isEmpty()) {
             for (VacationPeriodDto vacationPeriod : vacationPeriodDtos) {

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 import ru.egar.employments.domain.vacations.dto.VacationPeriodDto;
@@ -16,11 +17,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *  репозиторий обращается к микросервису vacations для получения информации по отпускам сотрудника.
+ *  получение информации по отпускам сотрудника из микросервиса vacations.
  */
-@Repository
+@Component
 @RequiredArgsConstructor
-public class VacationRepository {
+public class VacationManager {
 
     private final ObjectMapper objectMapper;
 
