@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.egar.employments.AbstractSpringBootTest;
 import ru.egar.employments.domain.vacations.dto.VacationPeriodDto;
-import ru.egar.employments.domain.vacations.repository.VacationRepository;
+import ru.egar.employments.domain.vacations.repository.VacationManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import static org.mockito.BDDMockito.given;
 class VacationServiceTest extends AbstractSpringBootTest {
 
     @MockBean
-    private VacationRepository vacationRepository;
+    private VacationManager vacationManager;
 
     @Autowired
     private VacationService vacationService;
@@ -24,16 +24,16 @@ class VacationServiceTest extends AbstractSpringBootTest {
     @Test
     void getVacationDates_is_not_empty() {
         List<VacationPeriodDto> vacationPeriodDtos = new ArrayList<>();
-        VacationPeriodDto vacPeriod = new VacationPeriodDto(1667350800000L,1668474000000L,"done");
+        VacationPeriodDto vacPeriod = new VacationPeriodDto(1667350800000L, 1668474000000L, "done");
         vacationPeriodDtos.add(vacPeriod);
-        given(vacationRepository.getVacations("username", "180311895")).willReturn(vacationPeriodDtos);
+        given(vacationManager.getVacations("username", "180311895")).willReturn(vacationPeriodDtos);
         assertThat(vacationService.getVacationDates("username", "180311895")).isNotEmpty();
     }
 
     @Test
     void getVacationDates_is_empty() {
         List<VacationPeriodDto> vacationPeriodDtos = new ArrayList<>();
-        given(vacationRepository.getVacations("asergeevich", "180311895")).willReturn(vacationPeriodDtos);
+        given(vacationManager.getVacations("asergeevich", "180311895")).willReturn(vacationPeriodDtos);
         assertThat(vacationService.getVacationDates("asergeevich", "180311895")).isEmpty();
     }
 }
