@@ -2,14 +2,10 @@ package ru.egar.employments.domain.employments.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ActiveProfiles;
 import ru.egar.employments.AbstractSpringBootTest;
-import ru.egar.employments.domain.work_calendar.repository.WeekendAndShortDayRepository;
 import ru.egar.employments.model.EmploymentDto;
 import ru.egartech.sdk.api.TaskClient;
 import ru.egartech.sdk.dto.task.deserialization.TaskDto;
@@ -24,15 +20,13 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-@ActiveProfiles("test")
-class EmploymentServiceTest extends AbstractSpringBootTest {
+class EmploymentsServiceImplTest extends AbstractSpringBootTest {
 
     @Autowired
-    private EmploymentService employmentService;
+    private ObjectMapper objectMapper;
 
     @Autowired
-    private WeekendAndShortDayRepository weekendAndShortDayRepository;
+    private EmploymentsServiceImpl employmentsServiceImpl;
 
     @MockBean
     private TaskClient taskClient;
@@ -43,13 +37,10 @@ class EmploymentServiceTest extends AbstractSpringBootTest {
     @Value("${fields.projects.id}")
     private String projectsFieldId;
 
-
-    ObjectMapper objectMapper = new ObjectMapper();
-
     @Test
     public void getEmploymentsByTaskIdNotEmpty() throws IOException {
         List<String> listTaskIds = new ArrayList<>();
-        List<EmploymentDto> employmentDtos =  new ArrayList<>();
+        List<EmploymentDto> employmentDtos = new ArrayList<>();
         employmentDtos.add(new EmploymentDto("НРД", "1661994000000"));
         listTaskIds.add("2z4g3d7");
         InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("employment/valid_employment.json");
@@ -64,15 +55,15 @@ class EmploymentServiceTest extends AbstractSpringBootTest {
                 .customField(startDateFieldId, TextFieldDto.class)
                 .getValue())
                 .isEqualTo("1661994000000");
-        assertThat(employmentService.getEmployments(listTaskIds)).isEqualTo(employmentDtos);
-        assertThat(employmentService.getEmployments(listTaskIds)).isNotEmpty();
+        assertThat(employmentsServiceImpl.getEmploymentsByIds(listTaskIds)).isEqualTo(employmentDtos);
+        assertThat(employmentsServiceImpl.getEmploymentsByIds(listTaskIds)).isNotEmpty();
     }
 
     @Test
     public void getEmploymentsByTaskIdIsEmpty() throws IOException {
         List<String> listTaskIds = new ArrayList<>();
         listTaskIds.add("2z4kcma");
-        List<EmploymentDto> employmentDtos =  new ArrayList<>();
+        List<EmploymentDto> employmentDtos = new ArrayList<>();
         InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("employment/not_valid_employment.json");
         TaskDto taskDto = objectMapper.readValue(inputStream, TaskDto.class);
         when(taskClient.getTaskById("2z4kcma", false)).thenReturn(taskDto);
@@ -85,7 +76,7 @@ class EmploymentServiceTest extends AbstractSpringBootTest {
                 .customField(startDateFieldId, TextFieldDto.class)
                 .getValue())
                 .isNull();
-        assertThat(employmentService.getEmployments(listTaskIds)).isEmpty();
+        assertThat(employmentsServiceImpl.getEmploymentsByIds(listTaskIds)).isEmpty();
     }
 
 }
