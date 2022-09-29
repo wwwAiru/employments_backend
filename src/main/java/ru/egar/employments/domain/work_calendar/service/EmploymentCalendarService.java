@@ -37,11 +37,11 @@ public class EmploymentCalendarService {
     private final ProjectRepository projectRepository;
 
     /**
-     * @param projectName - имя проекта для которого нужно вернуть календарь занятости
-     * @param beginDate - дата выхода на проект.
-     * @param egarId - id сотрудника
+     * @param projectName   - имя проекта для которого нужно вернуть календарь занятости
+     * @param beginDate     - дата выхода на проект.
+     * @param egarId        - id сотрудника
      * @param profileListId - id списка в котором находится сотрудник(списки делятся на: разработчик, аналитик, тестировщик)
-     * egarId и profileListId нужны для получения дат(дней) отпусков сотрудника из микросервиса vacations.
+     *                      egarId и profileListId нужны для получения дат(дней) отпусков сотрудника из микросервиса vacations.
      * @return - EmploymentCalendarDto - содержит название проекта и Map<String, HoursDto>,
      * где String - число месяца(прим. "1" - январь, "12" - декабрь), HoursDto - число рабочих часов в месяце
      * и число учтённых на проетке часов.
@@ -87,11 +87,11 @@ public class EmploymentCalendarService {
          */
         Map<String, HoursDto> workCalendar = new HashMap<>();
         // итерируя по месяцам года, заполняется workCalendar используя приватные методы этого сервиса
-        for ( ; startMonth<=12; startMonth++) {
+        for (; startMonth <= 12; startMonth++) {
             HoursDto hoursDto = new HoursDto(
                     getWorkHoursByMonth(startMonth, startDate, weekendAndHolidayOfYear, shortDaysOfYear, vacationDates),
                     getRegisteredHoursByMonth(startMonth, employmentDaysMap)
-                    );
+            );
             if (hoursDto.getWorkHours() != 0) {
                 workCalendar.put(String.valueOf(startMonth), hoursDto);
             }
@@ -101,12 +101,11 @@ public class EmploymentCalendarService {
     }
 
     /**
-     * медот принимает
-     * @param month - месяц(целое число от 1 до 12)
-     * @param date - дата начала (если есть)
+     * @param month                   - месяц(целое число от 1 до 12)
+     * @param date                    - дата начала (если есть)
      * @param weekendAndHolidayOfYear - сет выходных и праздничных дней,
-     * @param shortDaysOfYear - сет сокращённых дней,
-     * @param vacationDates - сет дней отпуска.
+     * @param shortDaysOfYear         - сет сокращённых дней,
+     * @param vacationDates           - сет дней отпуска.
      * @return - количество рабочих часов в месяц
      */
     private Integer getWorkHoursByMonth(int month, LocalDate date,
@@ -137,8 +136,7 @@ public class EmploymentCalendarService {
         monthPeriod.forEach(day -> {
             if (!weekendAndHolidayOfYear.contains(day) & !shortDaysOfYear.contains(day)) {
                 workHours.set(workHours.get() + workDayHours);
-            }
-            else if (shortDaysOfYear.contains(day)){
+            } else if (shortDaysOfYear.contains(day)) {
                 workHours.set(workHours.get() + shortDayHours);
             }
         });
@@ -171,6 +169,7 @@ public class EmploymentCalendarService {
 
     /**
      * метод выгружает учтённые часы на проекте, на весь текущий год, по дням
+     *
      * @param egarId - id сотрудника
      * @param projectName - название проекта для коготорого нужно выгрузить календарь учтённых часов
      * @return - List<EmploymentDay>. EmploymentDay - содержит имя проекта(String), дату(LocalDate),
@@ -198,11 +197,10 @@ public class EmploymentCalendarService {
         weekendAndShortDaysOfYear.forEach(day -> {
             if (day.getDayType() == DayType.WEEKEND | day.getDayType() == DayType.HOLIDAY) {
                 weekendAndHolidayOfYear.add(day.getDate());
-            }
-            else if (day.getDayType() == DayType.SHORTDAY){
+            } else if (day.getDayType() == DayType.SHORTDAY) {
                 shortDaysOfYear.add(day.getDate());
-                }
-            });
+            }
+        });
         if (dayType == DayType.HOLIDAY | dayType == DayType.WEEKEND) {
             return weekendAndHolidayOfYear;
         } else {
