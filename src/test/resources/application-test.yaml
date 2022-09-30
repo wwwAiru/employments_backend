@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:cuerp
+    username:
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: false
+    defer-datasource-initialization: true
+
+# url - микросервис отпусков
+# status - статус отпуска(согласован/новый..)
+vacations:
+  url: "http://localhost:8081/vacations/{profileListId}/{egarId}"
+  status_type: "done"
+
+clickup:
+  api:
+    tokens:
+      - ${clickup_api_token}
+
+fields:
+  start_date:
+    id: "58004edd-d04c-4edb-bed8-f6337397fd72"
+  end_date:
+    id: "879e67e3-eb65-45eb-9a82-94ac94470918"
+  projects:
+    id: "a34aa1f8-0ffc-4c1e-af06-f324b653610c"
+
+

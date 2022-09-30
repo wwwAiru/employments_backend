@@ -1,0 +1,21 @@
+{
+  "project_name": "НРД",
+  "work_calendar": {
+    "11": {
+      "work_hours": 96,
+      "registered_hours": 167.0
+    },
+    "12": {
+      "work_hours": 176,
+      "registered_hours": 176.0
+    },
+    "9": {
+      "work_hours": 176,
+      "registered_hours": 176.0
+    },
+    "10": {
+      "work_hours": 168,
+      "registered_hours": 168.0
+    }
+  }
+}
