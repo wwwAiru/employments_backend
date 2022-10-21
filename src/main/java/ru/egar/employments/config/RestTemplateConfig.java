@@ -1,7 +1,7 @@
 package ru.egar.employments.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
@@ -9,10 +9,12 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class RestTemplateConfig {
 
-    @Autowired
-    public void addInterceptor(TokenRequestInterceptor tri,
-                               RestTemplate restTemplate) {
-        restTemplate.getInterceptors().add(tri);
-    }
+    private final TokenRequestInterceptor tokenRequestInterceptor;
 
+    @Bean
+    public RestTemplate cuerpRestTemplate() {
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getInterceptors().add(tokenRequestInterceptor);
+        return restTemplate;
+    }
 }

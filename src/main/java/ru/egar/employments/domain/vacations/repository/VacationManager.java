@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -24,7 +26,9 @@ public class VacationManager {
 
     private final ObjectMapper objectMapper;
 
-    private final RestTemplate restTemplate;
+    @Autowired
+    @Qualifier("cuerpRestTemplate")
+    private RestTemplate restTemplate;
 
     @Value("${vacations.url}")
     private String url;
