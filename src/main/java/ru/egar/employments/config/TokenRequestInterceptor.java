@@ -1,6 +1,7 @@
 package ru.egar.employments.config;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
@@ -20,7 +21,7 @@ public class TokenRequestInterceptor implements ClientHttpRequestInterceptor {
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
         String token = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        if (token != null && !token.isEmpty()) {
+        if (!StringUtils.isEmpty(token)) {
             request.getHeaders().add("Authorization", token);
         }
         return execution.execute(request, body);
