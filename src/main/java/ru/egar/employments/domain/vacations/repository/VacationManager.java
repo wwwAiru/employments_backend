@@ -37,7 +37,7 @@ public class VacationManager {
                     .filter(v -> v.getStatusType().equals(vacationStatus))
                     .toList();
         } else {
-            log.info("Vacations not found");
+            log.info("Vacations for egarId: ".concat(egarId).concat(" not found"));
         }
         return validVacationsList;
     }
