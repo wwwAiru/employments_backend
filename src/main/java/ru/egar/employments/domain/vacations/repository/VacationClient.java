@@ -29,7 +29,7 @@ public class VacationClient {
 
     public List<VacationPeriodDto> getVacations(String egarId, String profileListId) {
         Map<String, String> params = new HashMap<>();
-        List<VacationPeriodDto> vacationPeriods = null;
+        List<VacationPeriodDto> vacationPeriods;
         params.put("egarId", egarId);
         params.put("profileListId", profileListId);
         ResponseEntity<VacationPeriodDto[]> vacationPeriodResponse = restTemplate.getForEntity(url, VacationPeriodDto[].class, params);
