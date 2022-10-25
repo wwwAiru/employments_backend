@@ -23,7 +23,7 @@ public class VacationService {
     public Set<LocalDate> getVacationDates(String egarId, String profileListId) {
         List<VacationPeriodDto> vacationPeriodDtos = vacationManager.getVacations(egarId, profileListId);
         Set<LocalDate> vacationDaysSet = new HashSet<>();
-        if (!vacationPeriodDtos.isEmpty()) {
+        if (vacationPeriodDtos != null && !vacationPeriodDtos.isEmpty()) {
             for (VacationPeriodDto vacationPeriod : vacationPeriodDtos) {
                 LocalDate startDate = DateUtil.unixToLocalDate(vacationPeriod.getStartDate());
                 LocalDate endDate = DateUtil.unixToLocalDate(vacationPeriod.getEndDate());
