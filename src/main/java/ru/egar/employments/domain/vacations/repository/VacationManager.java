@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import ru.egar.employments.domain.vacations.dto.VacationPeriodDto;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class VacationManager {
     public List<VacationPeriodDto> getVacations(String egarId, String profileListId) {
         List<VacationPeriodDto> validVacationsList;
         validVacationsList = vacationClient.getVacations(egarId, profileListId);
-        if (validVacationsList != null && !validVacationsList.isEmpty()) {
+        if (!CollectionUtils.isEmpty(validVacationsList)) {
             validVacationsList = validVacationsList.stream()
                     .filter(v -> v.getStatusType().equals(vacationStatus))
                     .toList();
