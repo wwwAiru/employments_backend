@@ -1,12 +1,12 @@
 package ru.egar.employments.domain.vacations.repository;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -35,7 +35,7 @@ public class VacationClient {
         params.put("egarId", egarId);
         params.put("profileListId", profileListId);
         ResponseEntity<List<VacationPeriodDto>> vacationPeriodResponse = restTemplate.exchange(url, HttpMethod.GET, null, new ParameterizedTypeReference<>() {}, params);
-        if (vacationPeriodResponse.getStatusCode() != HttpStatus.OK) {
+        if (!vacationPeriodResponse.getStatusCode().is2xxSuccessful()) {
             log.warn("Bad response from vacation service");
             throw new VacationsReceiveException();
         } else {
