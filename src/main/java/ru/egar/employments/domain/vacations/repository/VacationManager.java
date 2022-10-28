@@ -1,33 +1,24 @@
 package ru.egar.employments.domain.vacations.repository;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.util.CollectionUtils;
 import ru.egar.employments.domain.vacations.dto.VacationPeriodDto;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  *  получение информации по отпускам сотрудника из микросервиса vacations.
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class VacationManager {
 
-    private final ObjectMapper objectMapper;
-
-    private final RestTemplate restTemplate;
-
-    @Value("${vacations.url}")
-    private String url;
+    private final VacationClient vacationClient;
 
     @Value("${vacations.status_type}")
     private String vacationStatus;
@@ -40,20 +31,14 @@ public class VacationManager {
      */
     @SneakyThrows
     public List<VacationPeriodDto> getVacations(String egarId, String profileListId) {
-        Map<String, String> params = new HashMap<>();
-        List<VacationPeriodDto> validVacationsList = new ArrayList<>();
-        ResponseEntity<String> response = null;
-        params.put("egarId", egarId);
-        params.put("profileListId", profileListId);
-        try {
-            response = restTemplate.getForEntity(url, String.class, params);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (response != null) {
-        List<VacationPeriodDto> vacationPeriodDtos = objectMapper.readValue(response.getBody(), new TypeReference<>(){});
-        validVacationsList = vacationPeriodDtos.stream()
-                .filter(v -> v.getStatusType().equals(vacationStatus)).toList();
+        List<VacationPeriodDto> validVacationsList;
+        validVacationsList = vacationClient.getVacations(egarId, profileListId);
+        if (!CollectionUtils.isEmpty(validVacationsList)) {
+            validVacationsList = validVacationsList.stream()
+                    .filter(v -> v.getStatusType().equals(vacationStatus))
+                    .toList();
+        } else {
+            log.info("Vacations for egarId: ".concat(egarId).concat(" not found"));
         }
         return validVacationsList;
     }
