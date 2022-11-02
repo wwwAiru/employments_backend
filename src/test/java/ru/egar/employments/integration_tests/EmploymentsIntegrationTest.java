@@ -40,8 +40,7 @@ public class EmploymentsIntegrationTest extends AbstractSpringBootTest{
     public static GenericContainer employmentsBackend = new GenericContainer<>("employments_backend")
             .withEnv("db_username", "postgres")
             .withEnv("db_password", "postgres")
-            .withEnv("vacations.host", "vacation-backend")
-            .withEnv("vacations.port", "8080")
+            .withEnv("vacations.host", "vacation-backend:8080")
             .withEnv("CLICK_UP_API_TOKEN", System.getenv("CLICK_UP_API_TOKEN"))
             .withCreateContainerCmdModifier(cmd -> cmd.withName("employments-backend").withHostName("employments-backend"))
             .withNetwork(network)
@@ -68,8 +67,6 @@ public class EmploymentsIntegrationTest extends AbstractSpringBootTest{
 
     @Test
     public void testGetEmploymentsCalendar() {
-
-        TestRestTemplate restTemplate1 = new TestRestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -90,7 +87,7 @@ public class EmploymentsIntegrationTest extends AbstractSpringBootTest{
         params.put("beginDate", "1661994000000");
         params.put("egarId", "username");
         params.put("profileListId", "180311895");
-        ResponseEntity<EmploymentCalendarDto> response = restTemplate1.exchange(
+        ResponseEntity<EmploymentCalendarDto> response = restTemplate.exchange(
                 urlTemplate,
                 HttpMethod.GET,
                 request,
