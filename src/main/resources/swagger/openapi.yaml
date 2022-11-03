@@ -38,7 +38,7 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/EmploymentCalendarDto'
-  /employments/:
+  /employments:
     get:
       tags:
         - employments
