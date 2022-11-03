@@ -45,13 +45,13 @@ public class EmploymentsIntegrationTest extends AbstractSpringBootTest{
             .withCreateContainerCmdModifier(cmd -> cmd.withName("employments-backend").withHostName("employments-backend"))
             .withNetwork(network)
             .withExposedPorts(8080)
-            .waitingFor(Wait.forHttp("/employments/?id=2z4g3d7").forStatusCode(401));
+            .waitingFor(Wait.forHttp("/employments?id=2z4g3d7").forStatusCode(401));
 
     @Test
     public void testGetEmployments() {
         String host = employmentsBackend.getHost();
         Integer port = employmentsBackend.getFirstMappedPort();
-        String employmentsUrl = "http://"+ host +":"+ port +"/employments/?id=2z4g3d7";
+        String employmentsUrl = "http://"+ host +":"+ port +"/employments?id=2z4g3d7";
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + TokenUtil.getTokenFromKeycloak());
         HttpEntity request = new HttpEntity(headers);
