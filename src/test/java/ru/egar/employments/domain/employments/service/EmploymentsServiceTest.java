@@ -16,17 +16,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import ru.egar.employments.service.EmploymentsService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-class EmploymentsServiceImplTest extends AbstractSpringBootTest {
+class EmploymentsServiceTest extends AbstractSpringBootTest {
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
-    private EmploymentsServiceImpl employmentsServiceImpl;
+    private EmploymentsService employmentsService;
 
     @MockBean
     private TaskClient taskClient;
@@ -55,8 +56,8 @@ class EmploymentsServiceImplTest extends AbstractSpringBootTest {
                 .customField(startDateFieldId, TextFieldDto.class)
                 .getValue())
                 .isEqualTo("1661994000000");
-        assertThat(employmentsServiceImpl.getEmploymentsByIds(listTaskIds)).isEqualTo(employmentDtos);
-        assertThat(employmentsServiceImpl.getEmploymentsByIds(listTaskIds)).isNotEmpty();
+        assertThat(employmentsService.getEmploymentsByIds(listTaskIds)).isEqualTo(employmentDtos);
+        assertThat(employmentsService.getEmploymentsByIds(listTaskIds)).isNotEmpty();
     }
 
     @Test
@@ -76,7 +77,7 @@ class EmploymentsServiceImplTest extends AbstractSpringBootTest {
                 .customField(startDateFieldId, TextFieldDto.class)
                 .getValue())
                 .isNull();
-        assertThat(employmentsServiceImpl.getEmploymentsByIds(listTaskIds)).isEmpty();
+        assertThat(employmentsService.getEmploymentsByIds(listTaskIds)).isEmpty();
     }
 
 }
