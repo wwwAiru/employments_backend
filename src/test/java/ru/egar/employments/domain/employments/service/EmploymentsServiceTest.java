@@ -5,18 +5,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.util.ResourceUtils;
 import ru.egar.employments.AbstractSpringBootTest;
 import ru.egar.employments.model.EmploymentDto;
+import ru.egar.employments.service.EmploymentsService;
 import ru.egartech.sdk.api.TaskClient;
 import ru.egartech.sdk.dto.task.deserialization.TaskDto;
 import ru.egartech.sdk.dto.task.deserialization.customfield.field.label.LabelsFieldDto;
 import ru.egartech.sdk.dto.task.deserialization.customfield.field.text.TextFieldDto;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import ru.egar.employments.service.EmploymentsService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -44,8 +44,9 @@ class EmploymentsServiceTest extends AbstractSpringBootTest {
         List<EmploymentDto> employmentDtos = new ArrayList<>();
         employmentDtos.add(new EmploymentDto("НРД", "1661994000000"));
         listTaskIds.add("2z4g3d7");
-        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("employment/valid_employment.json");
-        TaskDto taskDto = objectMapper.readValue(inputStream, TaskDto.class);
+        TaskDto taskDto = objectMapper.readValue(
+                ResourceUtils.getFile(ResourceUtils.CLASSPATH_URL_PREFIX.concat("employment/valid_employment.json"))
+                , TaskDto.class);
         when(taskClient.getTaskById("2z4g3d7", false)).thenReturn(taskDto);
         assertThat(taskDto
                 .customField(projectsFieldId, LabelsFieldDto.class)
@@ -64,9 +65,9 @@ class EmploymentsServiceTest extends AbstractSpringBootTest {
     public void getEmploymentsByTaskIdIsEmpty() throws IOException {
         List<String> listTaskIds = new ArrayList<>();
         listTaskIds.add("2z4kcma");
-        List<EmploymentDto> employmentDtos = new ArrayList<>();
-        InputStream inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("employment/not_valid_employment.json");
-        TaskDto taskDto = objectMapper.readValue(inputStream, TaskDto.class);
+        TaskDto taskDto = objectMapper.readValue(
+                ResourceUtils.getFile(ResourceUtils.CLASSPATH_URL_PREFIX.concat("employment/not_valid_employment.json"))
+                , TaskDto.class);
         when(taskClient.getTaskById("2z4kcma", false)).thenReturn(taskDto);
         assertThat(taskDto
                 .customField(projectsFieldId, LabelsFieldDto.class)
