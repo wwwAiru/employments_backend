@@ -1,21 +1,57 @@
 {
   "project_name": "НРД",
   "work_calendar": {
-    "11": {
-      "work_hours": 96,
-      "registered_hours": 167.0
+    "2022": {
+      "11": {
+        "work_hours": 96,
+        "registered_hours": 96.0
+      },
+      "1": {
+        "work_hours": 128,
+        "registered_hours": 128.0
+      },
+      "2": {
+        "work_hours": 151,
+        "registered_hours": 151.0
+      },
+      "3": {
+        "work_hours": 175,
+        "registered_hours": 175.0
+      },
+      "4": {
+        "work_hours": 168,
+        "registered_hours": 168.0
+      },
+      "5": {
+        "work_hours": 160,
+        "registered_hours": 160.0
+      },
+      "6": {
+        "work_hours": 168,
+        "registered_hours": 168.0
+      },
+      "7": {
+        "work_hours": 168,
+        "registered_hours": 168.0
+      },
+      "8": {
+        "work_hours": 184,
+        "registered_hours": 184.0
+      },
+      "9": {
+        "work_hours": 176,
+        "registered_hours": 176.0
+      },
+      "10": {
+        "work_hours": 168,
+        "registered_hours": 168.0
+      }
     },
-    "12": {
-      "work_hours": 176,
-      "registered_hours": 176.0
-    },
-    "9": {
-      "work_hours": 176,
-      "registered_hours": 176.0
-    },
-    "10": {
-      "work_hours": 168,
-      "registered_hours": 168.0
+    "2021": {
+      "12": {
+        "work_hours": 7,
+        "registered_hours": 0.0
+      }
     }
   }
 }
