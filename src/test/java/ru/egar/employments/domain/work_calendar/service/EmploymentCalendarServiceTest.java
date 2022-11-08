@@ -72,11 +72,16 @@ class EmploymentCalendarServiceTest extends AbstractSpringBootTest {
                         .CLASSPATH_URL_PREFIX.concat("employment/calendar/employment_calendar.json")), new TypeReference<>() {
                 });
         given(vacationService.getVacationDates(egarId, profileListId)).willReturn(vacations);
-        EmploymentCalendarDto employmentCalendar = employmentCalendarService.getEmploymentCalendar(projectName, "1661994000000", egarId, profileListId);
+        EmploymentCalendarDto employmentCalendar = employmentCalendarService.getEmploymentCalendar(projectName, "1640912400000", egarId, profileListId);
         assertThat(employmentCalendar).isEqualTo(calendarDto);
         assertThat(employmentCalendar
                 .getWorkCalendar()
-                .get("11")
+                .get("2022").get("11")
                 .getWorkHours()).isEqualTo(96);
+        assertThat(employmentCalendar).isEqualTo(calendarDto);
+        assertThat(employmentCalendar
+                .getWorkCalendar()
+                .get("2021").get("12")
+                .getWorkHours()).isEqualTo(7);
     }
 }
