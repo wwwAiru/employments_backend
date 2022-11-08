@@ -48,9 +48,9 @@ public class EmploymentCalendarService {
      * и число учтённых на проетке часов.
      */
     public EmploymentCalendarDto getEmploymentCalendar(String projectName,
-                                                                                 String beginDate,
-                                                                                 String egarId,
-                                                                                 String profileListId) {
+                                                       String beginDate,
+                                                       String egarId,
+                                                       String profileListId) {
         Set<LocalDate> vacationDates = vacationService.getVacationDates(egarId, profileListId);
         LocalDate startDate = LocalDate.now().minusYears(1).with(TemporalAdjusters.firstDayOfYear());
         LocalDate endDate = LocalDate.now().with(TemporalAdjusters.lastDayOfYear());
