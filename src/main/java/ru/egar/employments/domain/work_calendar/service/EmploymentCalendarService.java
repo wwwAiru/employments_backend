@@ -47,7 +47,7 @@ public class EmploymentCalendarService {
      * где String - число месяца(прим. "1" - январь, "12" - декабрь), HoursDto - число рабочих часов в месяце
      * и число учтённых на проетке часов.
      */
-    public ru.egar.employments.model.EmploymentCalendarDto getEmploymentCalendar(String projectName,
+    public EmploymentCalendarDto getEmploymentCalendar(String projectName,
                                                                                  String beginDate,
                                                                                  String egarId,
                                                                                  String profileListId) {
