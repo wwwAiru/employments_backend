@@ -2,6 +2,7 @@ package ru.egar.employments.domain.work_calendar.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import ru.egar.employments.domain.vacations.service.VacationService;
 import ru.egar.employments.domain.work_calendar.entity.DayType;
 import ru.egar.employments.domain.work_calendar.entity.Employment;
@@ -46,97 +47,139 @@ public class EmploymentCalendarService {
      * где String - число месяца(прим. "1" - январь, "12" - декабрь), HoursDto - число рабочих часов в месяце
      * и число учтённых на проетке часов.
      */
-    public EmploymentCalendarDto getEmploymentCalendar(String projectName,
-                                                       String beginDate,
-                                                       String egarId,
-                                                       String profileListId) {
-        // получаем сет дней отпусков
+    public ru.egar.employments.model.EmploymentCalendarDto getEmploymentCalendar(String projectName,
+                                                                                 String beginDate,
+                                                                                 String egarId,
+                                                                                 String profileListId) {
         Set<LocalDate> vacationDates = vacationService.getVacationDates(egarId, profileListId);
-        // дата первого дня текущего года
-        LocalDate startDate = LocalDate.now().with(TemporalAdjusters.firstDayOfYear());
-        // дата последнего дня текущего года
-        LocalDate lastDayOfYear = LocalDate.now().with(TemporalAdjusters.lastDayOfYear());
-        // получаем дату выхода на проект в миллисекундах и преобразуем в LocalDate
+        LocalDate startDate = LocalDate.now().minusYears(1).with(TemporalAdjusters.firstDayOfYear());
+        LocalDate endDate = LocalDate.now().with(TemporalAdjusters.lastDayOfYear());
         LocalDate employmentStartDate = DateUtil.unixToLocalDate(Long.parseLong(beginDate));
-        int startMonth;
-        /* если дата выхода на проект раньше даты начала текущего года,
-            то месяц для создания рабочего календаря устанавливается первый(январь),
-            иначе начальный месяц устанавливается - месяц выхода на проект,
-            дополнительно устанавливается конкретная дата выхода на проект - startDate
-        */
-        if (employmentStartDate.isBefore(startDate)) {
-            startMonth = 1;
-        } else {
-            startMonth = employmentStartDate.getMonthValue();
-            startDate = employmentStartDate;
-        }
         // получаем из базы все выходные, праздники, сокращённые дни за период текущего года
-        List<WeekendAndShortDays> weekendAndShortDays = weekendAndShortDayRepository.findWeekendAndShortDays(startDate, lastDayOfYear);
+        List<WeekendAndShortDays> weekendAndShortDays = weekendAndShortDayRepository.findWeekendAndShortDays(startDate, endDate);
         // получаем из б.д. List<EmploymentDay> список учтённых часов на проетке по egarId и названию проета
-        List<Employment> registeredHoursByYear = findRegisteredHoursByYear(egarId, projectName);
-
-        Set<LocalDate> weekendAndHolidayOfYear = getDaysByType(DayType.WEEKEND, weekendAndShortDays);
-        Set<LocalDate> shortDaysOfYear = getDaysByType(DayType.SHORTDAY, weekendAndShortDays);
+        Set<LocalDate> weekendAndHoliday = getDaysByType(DayType.WEEKEND, weekendAndShortDays);
+        Set<LocalDate> shortDays = getDaysByType(DayType.SHORTDAY, weekendAndShortDays);
+        List<Employment> registeredHours = findRegisteredHours(egarId, projectName);
         /* преобразуем список список учтённых часов на проетке в Map<LocalDate, Double>,
          ключ - дата, значение - учтённые часы(double)
          */
-        Map<LocalDate, Double> employmentDaysMap = registeredHoursByYear.stream()
+        Map<LocalDate, Double> employmentDaysMap = registeredHours.stream()
                 .collect(Collectors.toMap(Employment::getDate, Employment::getRegisteredHours));
-        /* создал Map<Integer, HoursDto> workCalendar, Integer - месяц, HoursDto - число рабочих
-        и учтённых на проекте часов
-         */
+        Map<String, Map<String, HoursDto>> workCalendar = new HashMap<>();
+        EmploymentCalendarDto employmentCalendarDto = new EmploymentCalendarDto();
+        employmentCalendarDto.setProjectName(projectName);
+        Map<String, HoursDto> empCalendarByCurrentYear = getEmpCalendarByCurrentYear(
+                employmentStartDate,
+                weekendAndHoliday,
+                shortDays,
+                vacationDates,
+                employmentDaysMap);
+        Map<String, HoursDto> empCalendarByPreviousYear = getEmpCalendarByPreviousYear(employmentStartDate,
+                weekendAndHoliday,
+                shortDays,
+                vacationDates,
+                employmentDaysMap);
+        workCalendar.put(String.valueOf(LocalDate.now().getYear()), empCalendarByCurrentYear);
+        workCalendar.put(String.valueOf(LocalDate.now().minusYears(1).getYear()), empCalendarByPreviousYear);
+        employmentCalendarDto.setWorkCalendar(workCalendar);
+        return employmentCalendarDto;
+    }
+
+    /**
+     * @param beginEmploymentDate     - дата начала работы на проекте
+     * @param weekendAndHoliday       - сет выходных и праздничных дней,
+     * @param shortDays               - сет сокращённых дней,
+     * @param vacationDates           - сет дней отпуска
+     * @param employmentDaysMap       - Map<LocalDate, Double>, ключ - дата, значение - учтённые часы(double)
+     * @return                        - Map<String, HoursDto> количество рабочих и учтённых часов в месяц
+     */
+    private Map<String, HoursDto> getEmpCalendarByCurrentYear(LocalDate beginEmploymentDate,
+                                                             Set<LocalDate> weekendAndHoliday,
+                                                             Set<LocalDate> shortDays,
+                                                             Set<LocalDate> vacationDates,
+                                                             Map<LocalDate, Double> employmentDaysMap) {
         Map<String, HoursDto> workCalendar = new HashMap<>();
-        // итерируя по месяцам года, заполняется workCalendar используя приватные методы этого сервиса
-        for (; startMonth <= 12; startMonth++) {
+        int monthValue = LocalDate.now().getMonthValue();
+        for (int i = 1; i <= monthValue; i++) {
             HoursDto hoursDto = new HoursDto(
-                    getWorkHoursByMonth(startMonth, startDate, weekendAndHolidayOfYear, shortDaysOfYear, vacationDates),
-                    getRegisteredHoursByMonth(startMonth, employmentDaysMap)
+                    getWorkHoursByMonth(i, LocalDate.now().getYear(), beginEmploymentDate, weekendAndHoliday, shortDays, vacationDates),
+                    getRegisteredHoursByMonth(i, LocalDate.now().getYear(), employmentDaysMap)
             );
             if (hoursDto.getWorkHours() != 0) {
-                workCalendar.put(String.valueOf(startMonth), hoursDto);
+                workCalendar.put(String.valueOf(i), hoursDto);
             }
-            startDate = null; // дата выхода на проект обнуляется после первой итерации, так как больше не нужна
         }
-        return new EmploymentCalendarDto(projectName, workCalendar);
+        return workCalendar;
+    }
+
+    /**
+     * @param beginEmploymentDate     - дата начала работы на проекте
+     * @param weekendAndHoliday       - сет выходных и праздничных дней,
+     * @param shortDays               - сет сокращённых дней,
+     * @param vacationDates           - сет дней отпуска
+     * @param employmentDaysMap       - Map<LocalDate, Double>, ключ - дата, значение - учтённые часы(double)
+     * @return                        - HoursDto количество рабочих и учтённых часов
+     */
+    private Map<String, HoursDto> getEmpCalendarByPreviousYear(LocalDate beginEmploymentDate,
+                                                              Set<LocalDate> weekendAndHoliday,
+                                                              Set<LocalDate> shortDays,
+                                                              Set<LocalDate> vacationDates,
+                                                              Map<LocalDate, Double> employmentDaysMap) {
+        Map<String, HoursDto> workCalendar = new HashMap<>();
+        int monthValue = LocalDate.now().getMonthValue();
+        for (int i = 12; i > monthValue; i--) {
+            HoursDto hoursDto = new HoursDto(
+                    getWorkHoursByMonth(i,
+                            LocalDate.now().minusYears(1).getYear(),
+                            beginEmploymentDate,
+                            weekendAndHoliday,
+                            shortDays,
+                            vacationDates),
+                    getRegisteredHoursByMonth(i, LocalDate.now().minusYears(1).getYear(), employmentDaysMap)
+            );
+            workCalendar.put(String.valueOf(i), hoursDto);
+        }
+        return workCalendar;
     }
 
     /**
      * @param month                   - месяц(целое число от 1 до 12)
-     * @param date                    - дата начала (если есть)
-     * @param weekendAndHolidayOfYear - сет выходных и праздничных дней,
-     * @param shortDaysOfYear         - сет сокращённых дней,
+     * @param year                    - год
+     * @param beginEmploymentDate     - дата начала работы на проекте
+     * @param weekendAndHoliday       - сет выходных и праздничных дней,
+     * @param shortDays               - сет сокращённых дней,
      * @param vacationDates           - сет дней отпуска.
-     * @return - количество рабочих часов в месяц
+     * @return                        - количество рабочих часов в месяц
      */
-    private Integer getWorkHoursByMonth(int month, LocalDate date,
-                                        Set<LocalDate> weekendAndHolidayOfYear,
-                                        Set<LocalDate> shortDaysOfYear,
+    private Integer getWorkHoursByMonth(int month, int year, LocalDate beginEmploymentDate,
+                                        Set<LocalDate> weekendAndHoliday,
+                                        Set<LocalDate> shortDays,
                                         Set<LocalDate> vacationDates) {
         AtomicInteger workHours = new AtomicInteger(0);
+        LocalDate startDate = LocalDate.now().withYear(year).withMonth(month).with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate endDate = startDate.with(TemporalAdjusters.lastDayOfMonth());
+        // если месяц и год соответствуют дате начала работы на проекте, то считать часы с даты начала работы
+        if (beginEmploymentDate.getMonthValue() == month & beginEmploymentDate.getYear() == year) {
+            startDate = beginEmploymentDate;
+        }
         /* если сет отпусков не пуст, то добавить его к выходным и праздникам
-            и исключить из сета сохращённых дней
+           и исключить из сета сохращённых дней
         */
-        if (!vacationDates.isEmpty()) {
-            weekendAndHolidayOfYear.addAll(vacationDates);
-            shortDaysOfYear.removeAll(vacationDates);
+        if (!CollectionUtils.isEmpty(vacationDates)) {
+            weekendAndHoliday.addAll(vacationDates);
+            shortDays.removeAll(vacationDates);
         }
-        // если отсутствует дата с которой нужно считать, то установить мервое число месяца
-        if (date == null) {
-            date = LocalDate.now().withMonth(month).with(TemporalAdjusters.firstDayOfMonth());
-        }
-        // дата последнего дня месяца(переданного в параметр) текущего года
-        LocalDate endDate = date.with(TemporalAdjusters.lastDayOfMonth());
-        // создаётся список дней месяца monthPeriod
         List<LocalDate> monthPeriod = new ArrayList<>();
-        while (!date.isAfter(endDate)) {
-            monthPeriod.add(date);
-            date = date.plusDays(1);
+        while (!startDate.isAfter(endDate)) {
+            monthPeriod.add(startDate);
+            startDate = startDate.plusDays(1);
         }
         // суммируются часы обычных рабочих дней и сокращенных рабочих дней
         monthPeriod.forEach(day -> {
-            if (!weekendAndHolidayOfYear.contains(day) & !shortDaysOfYear.contains(day)) {
+            if (!weekendAndHoliday.contains(day) & !shortDays.contains(day)) {
                 workHours.set(workHours.get() + workDayHours);
-            } else if (shortDaysOfYear.contains(day)) {
+            } else if (shortDays.contains(day)) {
                 workHours.set(workHours.get() + shortDayHours);
             }
         });
@@ -145,66 +188,63 @@ public class EmploymentCalendarService {
 
     /**
      * @param month - месяц(int число от 1 до 12) за который выгружаются данные по учтённым часам
+     * @param year - год
      * @param employmentDaysMap - Map<LocalDate, Double> в которой ключ - дата, значение - количество учтённых часов
      * @return - возвращает количество учтённых часов(Double) на проекте за месяц(переданный в параметр)
      */
-    private Double getRegisteredHoursByMonth(int month,
+    private Double getRegisteredHoursByMonth(int month, int year,
                                              Map<LocalDate,
                                              Double> employmentDaysMap) {
         // дата первого дня месяца(переданного в параметр) текущего года
-        LocalDate date = LocalDate.now().withMonth(month).with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate statDate = LocalDate.now().withYear(year).withMonth(month).with(TemporalAdjusters.firstDayOfMonth());
         // дата последнего дня месяца(переданного в параметр) текущего года
-        LocalDate endDate = LocalDate.now().withMonth(month).with(TemporalAdjusters.lastDayOfMonth());
+        LocalDate endDate = LocalDate.now().withYear(year).withMonth(month).with(TemporalAdjusters.lastDayOfMonth());
         Double registeredHours = 0.0;
         // в цикле суммируются учтённые часы на проекте за месяц(переданный в параметр)
-        while (!date.isAfter(endDate)) {
-            Double hoursPerDay = employmentDaysMap.get(date);
+        while (!statDate.isAfter(endDate)) {
+            Double hoursPerDay = employmentDaysMap.get(statDate);
             if (hoursPerDay != null) {
                 registeredHours = registeredHours + hoursPerDay; //суммируются учтённые часы за месяц
             }
-            date = date.plusDays(1);
+            statDate = statDate.plusDays(1);
         }
         return registeredHours;
     }
 
     /**
-     * метод выгружает учтённые часы на проекте, на весь текущий год, по дням
-     *
      * @param egarId - id сотрудника
      * @param projectName - название проекта для коготорого нужно выгрузить календарь учтённых часов
      * @return - List<EmploymentDay>. EmploymentDay - содержит имя проекта(String), дату(LocalDate),
      * количество учтённых часов(int)
      */
-    private List<Employment> findRegisteredHoursByYear(String egarId, String projectName) {
-        // дата первого дня текущего года
-        LocalDate firstDayOfYear = LocalDate.now().with(TemporalAdjusters.firstDayOfYear());
-        // дата последнего дня текущего года
-        LocalDate lastDayOfYear = LocalDate.now().with(TemporalAdjusters.lastDayOfYear());
+    private List<Employment> findRegisteredHours(String egarId, String projectName) {
+        LocalDate startDate = LocalDate.now().minusYears(1).with(TemporalAdjusters.firstDayOfYear());
+        LocalDate endDate = LocalDate.now().with(TemporalAdjusters.lastDayOfYear());
         Project name = projectRepository.findByProjectName(projectName);
-        return employmentDayRepository.findEmployment(name, egarId, firstDayOfYear, lastDayOfYear);
+        return employmentDayRepository.findEmployment(name, egarId, startDate, endDate);
     }
 
     /**
      * @param dayType - Enum - тип дня(WEEKEND, HOLIDAY, SHORTDAY)
-     * @param weekendAndShortDaysOfYear - список выходных, праздничных, сокращённых дней
+     * @param weekendAndShortDays - список выходных, праздничных, сокращённых дней
      * @return Set<LocalDate> в зависимости от типа дня.
      */
     private Set<LocalDate> getDaysByType(Enum<DayType> dayType,
-                                         List<WeekendAndShortDays> weekendAndShortDaysOfYear) {
-        Set<LocalDate> weekendAndHolidayOfYear = new HashSet<>();
-        Set<LocalDate> shortDaysOfYear = new HashSet<>();
+                                         List<WeekendAndShortDays> weekendAndShortDays) {
+        Set<LocalDate> weekendAndHoliday = new HashSet<>();
+        Set<LocalDate> shortDays = new HashSet<>();
         //заполняем два множества дат по типу дня 1 - выходной и праздник, 2 - сокращённый день
-        weekendAndShortDaysOfYear.forEach(day -> {
+        weekendAndShortDays.forEach(day -> {
             if (day.getDayType() == DayType.WEEKEND | day.getDayType() == DayType.HOLIDAY) {
-                weekendAndHolidayOfYear.add(day.getDate());
+                weekendAndHoliday.add(day.getDate());
             } else if (day.getDayType() == DayType.SHORTDAY) {
-                shortDaysOfYear.add(day.getDate());
+                shortDays.add(day.getDate());
             }
         });
         if (dayType == DayType.HOLIDAY | dayType == DayType.WEEKEND) {
-            return weekendAndHolidayOfYear;
+            return weekendAndHoliday;
         } else {
-            return shortDaysOfYear;
+            return shortDays;
         }
     }
 
