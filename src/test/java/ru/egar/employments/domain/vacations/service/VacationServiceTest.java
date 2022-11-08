@@ -22,7 +22,7 @@ class VacationServiceTest extends AbstractSpringBootTest {
     private VacationService vacationService;
 
     @Test
-    void getVacationDates_is_not_empty() {
+    void getVacationDatesNotEmpty() {
         List<VacationPeriodDto> vacationPeriodDtos = new ArrayList<>();
         VacationPeriodDto vacPeriod = new VacationPeriodDto(1667350800000L, 1668474000000L, "done");
         vacationPeriodDtos.add(vacPeriod);
@@ -31,7 +31,7 @@ class VacationServiceTest extends AbstractSpringBootTest {
     }
 
     @Test
-    void getVacationDates_is_empty() {
+    void getVacationDatesIsEmpty() {
         List<VacationPeriodDto> vacationPeriodDtos = new ArrayList<>();
         given(vacationManager.getVacations("asergeevich", "180311895")).willReturn(vacationPeriodDtos);
         assertThat(vacationService.getVacationDates("asergeevich", "180311895")).isEmpty();
