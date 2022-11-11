@@ -184,7 +184,7 @@ public class EmploymentCalendarService {
         while (!startDate.isAfter(endDate)) {
             Double hoursPerDay = employmentDaysMap.get(startDate);
             if (hoursPerDay != null) {
-                registeredHours = registeredHours + hoursPerDay; //суммируются учтённые часы за месяц
+                registeredHours = registeredHours + hoursPerDay;
             }
             startDate = startDate.plusDays(1);
         }
