@@ -75,7 +75,8 @@ public class EmploymentCalendarService {
                                 weekendAndHoliday,
                                 shortDays,
                                 vacationDates,
-                                employmentDaysMap)))
+                                employmentDaysMap)
+                ))
                 .build();
     }
 
