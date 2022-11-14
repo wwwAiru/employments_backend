@@ -41,6 +41,7 @@ public class EmploymentsIntegrationTest extends AbstractSpringBootTest{
             .withEnv("db_username", "postgres")
             .withEnv("db_password", "postgres")
             .withEnv("vacations.host", "vacation-backend:8080")
+            .withEnv("DB_SCHEMA", "public")
             .withEnv("CLICK_UP_API_TOKEN", System.getenv("CLICK_UP_API_TOKEN"))
             .withCreateContainerCmdModifier(cmd -> cmd.withName("employments-backend").withHostName("employments-backend"))
             .withNetwork(network)
@@ -62,7 +63,7 @@ public class EmploymentsIntegrationTest extends AbstractSpringBootTest{
                 new ParameterizedTypeReference<>() {}
         );
         assertThat(Objects.requireNonNull(employments.getBody()).get(0).getProjectName()).isEqualTo("НРД");
-        assertThat(employments.getBody().get(0).getBeginDate()).isEqualTo("1664586000000");
+        assertThat(employments.getBody().get(0).getBeginDate()).isEqualTo("1640912400000");
     }
 
     @Test
@@ -84,7 +85,7 @@ public class EmploymentsIntegrationTest extends AbstractSpringBootTest{
                 .toUriString();
         Map<String, String> params = new HashMap<>();
         params.put("projectName", "НРД");
-        params.put("beginDate", "1661994000000");
+        params.put("beginDate", "1640912400000");
         params.put("egarId", "username");
         params.put("profileListId", "180311895");
         ResponseEntity<EmploymentCalendarDto> response = restTemplate.exchange(
