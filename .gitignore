@@ -31,9 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
-/src/main/resources/api.http
 /src/main/resources/data-20191112T1252-structure-20191112T1247.csv
 /src/main/resources/pgfutter_windows_amd64.exe
 /src/main/java/ru/egar/employments/utils/
 /src/main/resources/application.txt
-/src/main/resources/data.csv

@@ -1,0 +1,127 @@
+# ##############################################################
+# Получить таску
+# ##############################################################
+
+GET https://api.clickup.com/api/v2/task/2rgq20y
+Accept: application/json
+Authorization: pk_42522203_38VT91RTWNXQ8XAW7QWUWJTURKLFN4T7
+
+###
+
+# ##############################################################
+# Получить таску по кастом филдам
+# ##############################################################
+
+GET https://api.clickup.com/api/v2/list/180311911/task
+#GET https://api.clickup.com/api/v2/list/180311895/task?custom_fields=[{"field_id":"5c6128d2-1c1f-420d-890a-e85afd61b123","operator":"=","value":"asergeevich@egartech.ru"}]
+Accept: application/json
+Authorization: pk_42522203_38VT91RTWNXQ8XAW7QWUWJTURKLFN4T7
+
+###
+
+# ##############################################################
+# Создать таску
+# ##############################################################
+
+POST https://api.clickup.com/api/v2/list/204552356/task
+Content-Type: application/json
+Authorization: pk_42517824_IK3DYAYK72IQEUIDZZR6SNVYYIE2B22K
+
+{
+  "description": "Новый сотрудник",
+  "id": "buy_clickup",
+  "name": "Сотрудник: Иванов Иван Иванович",
+  "text_content": "Текст",
+  "custom_fields": [
+    {
+      "id": "c0fdc3d9-914b-454c-9d88-7371a3d72233",
+      "value": "iivanovich"
+    }
+  ]
+}
+
+###
+
+# ##############################################################
+# Обновить таску
+# ##############################################################
+
+PUT https://api.clickup.com/api/v2/task/2yrz1yb
+Content-Type: application/json
+Authorization: pk_42517824_IK3DYAYK72IQEUIDZZR6SNVYYIE2B22K
+
+{
+  "id": "2yrz1yb",
+  "custom_fields": [
+    {
+      "id": "3d308958-197f-432d-affd-aa6caa5b5f61",
+      "value": [
+        {
+          "id": "3d308958-197f-432d-affd-aa6caa5b5f61",
+          "name": "Sickday",
+          "type": "list_relationship",
+          "type_config": {
+            "fields": [],
+            "subcategory_id": "176223808",
+            "linked_subcategory_access": true,
+            "subcategory_inverted_name": "Sickdays"
+          },
+          "date_created": "1662468863920",
+          "hide_from_guests": false,
+          "value": [
+            {
+              "id": "2x7c5nq",
+              "name": "1-4",
+              "status": "to do",
+              "color": "#d3d3d3",
+              "custom_type": null,
+              "team_id": "24588904",
+              "deleted": false,
+              "url": "https://app.clickup.com/t/2x7c5nq",
+              "access": true
+            }
+          ],
+          "required": false
+        }
+      ]
+    }
+  ]
+}
+
+###
+
+# ##############################################################
+# Обновить кастом филд
+# ##############################################################
+
+POST https://api.clickup.com/api/v2/task/2x7bv47/field/3d308958-197f-432d-affd-aa6caa5b5f61
+Content-Type: application/json
+Authorization: pk_42517824_IK3DYAYK72IQEUIDZZR6SNVYYIE2B22K
+
+# dropdown: orderindex -> value
+# labels: stream().map(Option::getId) -> value
+# relations: subcategoryId -> value
+
+# string
+# list
+# int
+# { add: ["id"], rem: [] }
+
+{
+  "value": {
+    "add": [],
+    "rem": []
+  }
+}
+
+###
+
+# ##############################################################
+# Дебаг
+# ##############################################################
+
+GET http://localhost:8080/debug/180311895/NOT_A_USER
+Content-Type: application/json
+Authorization: pk_42517824_CTG426HTJX3LPJV1THHNRN4P0TLDDK23
+Accept-Language: en-US
+Content-Language: en-US
